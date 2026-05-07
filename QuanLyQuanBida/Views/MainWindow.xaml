@@ -1,0 +1,141 @@
+﻿<Window x:Class="QuanLyQuanBida.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:QuanLyQuanBida.ViewModels"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="750" Width="1400">
+    <Window.DataContext>
+        <local:MainViewModel/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Border BorderBrush="Black" BorderThickness="1" Background="#FF247563">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="125*"/>
+                    <RowDefinition Height="241*"/>
+                </Grid.RowDefinitions>
+            </Grid>
+        </Border>
+        <ContentControl Content="{Binding CurrentView}" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Center" Height="734" Width="1150" GotKeyboardFocus="ContentControl_GotKeyboardFocus"/>
+        <Grid Background="#FF3F7343">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="215*"/>
+                <RowDefinition Height="460*"/>
+                <RowDefinition Height="59*"/>
+            </Grid.RowDefinitions>
+            <Rectangle Height="2" Fill="#FF4F8C53" VerticalAlignment="Top" Margin="20,204,20,0"/>
+
+            <Button Visibility="{Binding IsLogin}" Command="{Binding BackLoginCommand}" Content="↩ Đăng xuất" HorizontalAlignment="Center" Grid.Row="2" VerticalAlignment="Center" Background="#FF3F7343" BorderBrush="#FF3F7343" FontSize="24" Foreground="#FFD9BC66" FontWeight="Bold" Height="59" Width="250"/>
+            <ListBox x:Name="lb" SelectionMode="Single" 
+                     Grid.Row="1" 
+                     Background="#FF3F7343" 
+                     BorderBrush="#FF3F7343"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                     Visibility="{Binding IsLogin}">
+                <ListBoxItem>
+                    <ListBoxItem.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" 
+                      Command="{Binding DataContext.SwitchViewCommand, RelativeSource={RelativeSource AncestorType=Window}}" 
+                      CommandParameter="TrangChu"/>
+                    </ListBoxItem.InputBindings>
+                    <StackPanel Width="250" Orientation="Horizontal" Margin="-5 10 0 10">
+                        <TextBlock Width="10"/>
+                        <TextBlock Width="40" Text="🏠" Foreground="#D99066" TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+                        <TextBlock Width="200" Text="Trang Chủ" Foreground="#FFD9BC66" Padding="15 0 0 0" FontSize="14" FontWeight="Bold"/>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem>
+                    <ListBoxItem.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" 
+                      Command="{Binding DataContext.SwitchViewCommand, RelativeSource={RelativeSource AncestorType=Window}}" 
+                      CommandParameter="Menu"/>
+                    </ListBoxItem.InputBindings>
+                    <StackPanel Width="250" Orientation="Horizontal" Margin="-5 10 0 10">
+                        <TextBlock Width="10"/>
+                        <TextBlock Width="40" Text="📃" Foreground="#D99066" TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+                        <TextBlock Width="200" Text="Menu" Foreground="#FFD9BC66" Padding="15 0 0 0" FontSize="14" FontWeight="Bold"/>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem>
+                    <ListBoxItem.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" 
+                      Command="{Binding DataContext.SwitchViewCommand, RelativeSource={RelativeSource AncestorType=Window}}" 
+                      CommandParameter="Ban"/>
+                    </ListBoxItem.InputBindings>
+                    <StackPanel Width="250" Orientation="Horizontal" Margin="-5 10 0 10">
+                        <TextBlock Width="10"/>
+                        <TextBlock Width="40" Text="✔" Foreground="#D99066" TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+                        <TextBlock Width="200" Text="Tình Trạng Bàn" Foreground="#FFD9BC66" Padding="15 0 0 0" FontSize="14" FontWeight="Bold"/>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem>
+                    <ListBoxItem.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" 
+                      Command="{Binding DataContext.SwitchViewCommand, RelativeSource={RelativeSource AncestorType=Window}}" 
+                      CommandParameter="LichSu"/>
+                    </ListBoxItem.InputBindings>
+                    <StackPanel Width="250" Orientation="Horizontal" Margin="-5 10 0 10">
+                        <TextBlock Width="10"/>
+                        <TextBlock Width="40" Text="⏳" Foreground="#D99066" TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+                        <TextBlock Width="200" Text="Lịch Sử" Foreground="#FFD9BC66" Padding="15 0 0 0" FontSize="14" FontWeight="Bold"/>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem>
+                    <ListBoxItem.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" 
+                      Command="{Binding DataContext.SwitchViewCommand, RelativeSource={RelativeSource AncestorType=Window}}" 
+                      CommandParameter="KhachHang"/>
+                    </ListBoxItem.InputBindings>
+                    <StackPanel Width="250" Orientation="Horizontal" Margin="-5 10 0 10">
+                        <TextBlock Width="10"/>
+                        <TextBlock Width="40" Text="🤴🏾" Foreground="#D99066" TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+                        <TextBlock Width="200" Text="Khách Hàng" Foreground="#FFD9BC66" Padding="15 0 0 0" FontSize="14" FontWeight="Bold"/>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem Visibility="{Binding PermisionManager}">
+                    <ListBoxItem.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" 
+                      Command="{Binding DataContext.SwitchViewCommand, RelativeSource={RelativeSource AncestorType=Window}}" 
+                      CommandParameter="Kho"/>
+                    </ListBoxItem.InputBindings>
+                    <StackPanel Width="250" Orientation="Horizontal" Margin="-5 10 0 10">
+                        <TextBlock Width="10"/>
+                        <TextBlock Width="40" Text="☗" Foreground="#D99066" TextAlignment="Right" VerticalAlignment="Center" FontSize="14"/>
+                        <TextBlock Width="200" Text="Kho" Foreground="#FFD9BC66" Padding="15 0 0 0" FontSize="14" FontWeight="Bold"/>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem Visibility="{Binding PermisionManager}">
+                    <ListBoxItem.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" 
+                      Command="{Binding DataContext.SwitchViewCommand, RelativeSource={RelativeSource AncestorType=Window}}" 
+                      CommandParameter="NhanVien"/>
+                    </ListBoxItem.InputBindings>
+                    <StackPanel Width="250" Orientation="Horizontal" Margin="-5 10 0 10">
+                        <TextBlock Width="10"/>
+                        <TextBlock Width="40" Text="👥" Foreground="#D99066" TextAlignment="Right" VerticalAlignment="Center"/>
+                        <TextBlock Width="200" Text="Nhân Viên" Foreground="#FFD9BC66" Padding="15 0 0 0" FontSize="14" FontWeight="Bold"/>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem Visibility="{Binding PermisionManager}">
+                    <ListBoxItem.InputBindings>
+                        <MouseBinding MouseAction="LeftClick" 
+                      Command="{Binding DataContext.SwitchViewCommand, RelativeSource={RelativeSource AncestorType=Window}}" 
+                      CommandParameter="ThongKe"/>
+                    </ListBoxItem.InputBindings>
+                    <StackPanel Width="250" Orientation="Horizontal" Margin="-5 10 0 10">
+                        <TextBlock Width="10"/>
+                        <TextBlock Width="40" Text="📈" Foreground="#D99066" TextAlignment="Right" VerticalAlignment="Center"/>
+                        <TextBlock Width="200" Text="Thống Kê" Foreground="#FFD9BC66" Padding="15 0 0 0" FontSize="14" FontWeight="Bold"/>
+                    </StackPanel>
+                </ListBoxItem>
+            </ListBox>
+        </Grid>
+    </Grid>
+</Window>

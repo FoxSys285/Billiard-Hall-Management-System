@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="QuanLyQuanBida.Views.DangNhapView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuanLyQuanBida.ViewModels"
+             mc:Ignorable="d" 
+             d:DesignHeight="734" d:DesignWidth="1150"
+             d:DataContext="{d:DesignInstance local:MainViewModel, IsDesignTimeCreatable=True}">
+    <Grid Background="#FF388027">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="106*"/>
+            <RowDefinition Height="261*"/>
+        </Grid.RowDefinitions>
+        <Grid>
+            <Border BorderBrush="#FFF2EDC2" BorderThickness="1" Background="#FFF2EDC2" CornerRadius="30,30,30,30" Margin="228,75,228,38" RenderTransformOrigin="0.5,0.5">
+                <Border.RenderTransform>
+                    <TransformGroup>
+                        <ScaleTransform/>
+                        <SkewTransform/>
+                        <RotateTransform Angle="0.024"/>
+                        <TranslateTransform/>
+                    </TransformGroup>
+                </Border.RenderTransform>
+                <Grid>
+                    <TextBlock HorizontalAlignment="Left" Margin="218,0,0,0" TextWrapping="Wrap" Text="ĐĂNG NHẬP" VerticalAlignment="Center" FontSize="40" FontWeight="Bold" Foreground="#FF61AC2E"/>
+                </Grid>
+            </Border>
+        </Grid>
+        <TextBox Text="{Binding InputTK}" HorizontalAlignment="Center" Margin="0,126,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="466" Height="40" FontSize="30"/>
+        <TextBlock HorizontalAlignment="Left" Margin="161,126,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Tài khoản:" VerticalAlignment="Top" FontWeight="Bold" FontSize="30" Foreground="#FFF1F959"/>
+        <TextBlock HorizontalAlignment="Left" Margin="161,218,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Mật khẩu:" VerticalAlignment="Top" FontWeight="Bold" FontSize="30" RenderTransformOrigin="0.664,0.494" Foreground="#FFF6FF3D"/>
+        <TextBox Text="{Binding InputMK}" HorizontalAlignment="Center" Margin="0,218,0,0" Grid.Row="1" TextWrapping="Wrap" VerticalAlignment="Top" Width="466" Height="40" FontSize="30"/>
+        <Button IsDefault="True" Command="{Binding DangNhapCommand}" Content="Đăng nhập" HorizontalAlignment="Center" Margin="0,340,0,0" Grid.Row="1" VerticalAlignment="Top" Height="68" Width="354" Background="#FFF2EDC2" FontWeight="Bold" FontSize="36" BorderBrush="#FFF2EDC2" Foreground="#FF7A831A"/>
+
+    </Grid>
+</UserControl>
