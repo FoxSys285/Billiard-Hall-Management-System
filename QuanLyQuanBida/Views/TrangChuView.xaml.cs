@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using QuanLyQuanBida.ViewModels;
 
 namespace QuanLyQuanBida.Views
 {
@@ -23,6 +24,17 @@ namespace QuanLyQuanBida.Views
         public TrangChuView()
         {
             InitializeComponent();
+        }
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is MainViewModel vm)
+            {
+                try
+                {
+                    vm.LoadFullData();
+                }
+                catch { /* swallow to avoid crashing UI if DB unavailable at design time */ }
+            }
         }
         private void Button_Click(object sender, RoutedEventArgs e)
         {

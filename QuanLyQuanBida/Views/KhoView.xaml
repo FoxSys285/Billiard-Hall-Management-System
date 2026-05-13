@@ -5,8 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuanLyQuanBida.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="734" d:DesignWidth="1150"
-             d:DataContext="{d:DesignInstance local:MainViewModel, IsDesignTimeCreatable=True}">
+             d:DesignHeight="734" d:DesignWidth="1150">
     <Grid Background="#FFE9E9E9">
         <Grid.RowDefinitions>
             <RowDefinition Height="68*"/>

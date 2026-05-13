@@ -18,11 +18,15 @@
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Cursor" Value="Hand"/>
-            <Style.Resources>
-                <Style TargetType="Border">
-                    <Setter Property="CornerRadius" Value="5"/>
-                </Style>
-            </Style.Resources>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="10">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style TargetType="TextBox" x:Key="ModernTextBox">
@@ -47,7 +51,7 @@
                     <TextBlock HorizontalAlignment="Left" Text="Khách Hàng" VerticalAlignment="Center" FontWeight="Bold" FontSize="36" Foreground="Black" Margin="40,0,0,0"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,40,0">
                         <TextBlock Text="{Binding CurrentAccount.TenNV}" FontWeight="Bold" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0"/>
-                        <Button Content="❌" Background="{x:Null}" FontSize="30" Foreground="Black" BorderBrush="{x:Null}" Click="Button_Click" Cursor="Hand"/>
+                        <Button Content="❌" Background="Transparent" Foreground="Black" FontSize="50" BorderThickness="0" Cursor="Hand" Margin="10,0" Click="Button_Click"/>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -74,10 +78,15 @@
 
                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
                             <Button Content="Thêm" Style="{StaticResource ActionButtonStyle}" 
-                                    Width="180" Height="45" Margin="0,0,20,0"
+                                    Width="130" Height="45" Margin="0,0,10,0"
                                     Command="{Binding OpenAddCommand}"/>
+
+                            <Button Content="Sửa" Style="{StaticResource ActionButtonStyle}" 
+                                    Width="130" Height="45" Margin="0,0,10,0"
+                                    Command="{Binding OpenEditCommand}"/>
+
                             <Button Content="Xóa" Style="{StaticResource ActionButtonStyle}" 
-                                    Width="180" Height="45"
+                                    Width="130" Height="45"
                                     Command="{Binding DeleteKhachHangCommand}"/>
                         </StackPanel>
                     </Grid>
@@ -88,7 +97,8 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Mã khách hàng" Binding="{Binding MaKhachHang}" Width="180"/>
                             <DataGridTextColumn Header="Họ tên" Binding="{Binding TenKhachHang}" Width="*"/>
-                            <DataGridTextColumn Header="SĐT" Binding="{Binding SoDienThoai}" Width="300"/>
+                            <DataGridTextColumn Header="SĐT" Binding="{Binding SoDienThoai}" Width="180"/>
+                            <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="230"/>
                             <DataGridTextColumn Header="Số điểm" Binding="{Binding DiemTichLuy}" Width="120"/>
                         </DataGrid.Columns>
                     </DataGrid>
@@ -99,7 +109,7 @@
         <Grid Background="#55000000" 
               Visibility="{Binding IsShowAdd, Converter={StaticResource BooleanToVisibilityConverter}}">
 
-            <Border Background="White" CornerRadius="15" Width="450" 
+            <Border Background="White" CornerRadius="15" Width="500" 
                     VerticalAlignment="Center" HorizontalAlignment="Center" Padding="30">
                 <Grid>
                     <Grid.RowDefinitions>
@@ -108,24 +118,36 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <Grid Grid.Row="0" Margin="0,0,0,30">
-                        <TextBlock Text="KHÁCH HÀNG MỚI" FontWeight="Bold" FontSize="18" Foreground="#666666" VerticalAlignment="Center"/>
+                    <Grid Grid.Row="0">
+                        <TextBlock Text="THÔNG TIN KHÁCH HÀNG" FontWeight="Bold" FontSize="18" Foreground="#4e6e5d" VerticalAlignment="Center"/>
                         <Button Content="✕" Command="{Binding CloseAddCommand}" HorizontalAlignment="Right" 
                                 Background="Transparent" BorderThickness="0" FontSize="20" Cursor="Hand" Foreground="#666666"/>
                     </Grid>
 
-                    <StackPanel Grid.Row="1" Margin="0,0,0,30">
-                        <TextBlock Text="Mã khách hàng" Foreground="#AAAAAA" FontSize="13" Margin="0,0,0,5"/>
-                        <TextBox Text="{Binding AddMaKH}" Style="{StaticResource ModernTextBox}" IsReadOnly="True" Foreground="#888888" Margin="0,0,0,20"/>
-
-                        <TextBlock Text="Tên khách hàng" Foreground="#AAAAAA" FontSize="13" Margin="0,0,0,5"/>
-                        <TextBox Text="{Binding AddTenKH, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Margin="0,0,0,20"/>
+                    <StackPanel Grid.Row="1" Margin="0,30">
+                        <Grid Margin="0,0,0,20">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="150"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                <TextBlock Text="Mã khách hàng" Foreground="#AAAAAA" FontSize="13" Margin="0,0,0,5"/>
+                                <TextBox Text="{Binding AddMaKH}" Style="{StaticResource ModernTextBox}" IsReadOnly="True" Foreground="#888888"/>
+                            </StackPanel>
+                            <StackPanel Grid.Column="1">
+                                <TextBlock Text="Tên khách hàng" Foreground="#AAAAAA" FontSize="13" Margin="0,0,0,5"/>
+                                <TextBox Text="{Binding AddTenKH, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}"/>
+                            </StackPanel>
+                        </Grid>
 
                         <TextBlock Text="Số điện thoại" Foreground="#AAAAAA" FontSize="13" Margin="0,0,0,5"/>
-                        <TextBox Text="{Binding AddSDT, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}"/>
+                        <TextBox Text="{Binding AddSDT, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Margin="0,0,0,20"/>
+
+                        <TextBlock Text="Email" Foreground="#AAAAAA" FontSize="13" Margin="0,0,0,5"/>
+                        <TextBox Text="{Binding AddEmail, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}"/>
                     </StackPanel>
 
-                    <Button Grid.Row="2" Content="THÊM KHÁCH HÀNG" Command="{Binding ConfirmAddCommand}"
+                    <Button Grid.Row="2" Content="LƯU THÔNG TIN" Command="{Binding ConfirmAddCommand}"
                             Style="{StaticResource ActionButtonStyle}" Height="50" FontSize="18"/>
                 </Grid>
             </Border>

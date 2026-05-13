@@ -12,15 +12,64 @@
             <RowDefinition Height="68*"/>
             <RowDefinition Height="299*"/>
         </Grid.RowDefinitions>
-        <Border BorderBrush="#FFF2EDC2" BorderThickness="1" Margin="30,20,30,0" Background="White" CornerRadius="20,20,20,20">
+        <Border BorderBrush="#FFF2EDC2" BorderThickness="1" Margin="30,20,30,0" Background="White" CornerRadius="20">
             <Grid>
-                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="LỊCH SỬ" VerticalAlignment="Center" FontWeight="Bold" FontSize="36" Foreground="Black" Margin="40,0,0,0"/>
-                <Button Content="❌" Background="{x:Null}" FontWeight="Bold" FontSize="40" Foreground="Black" Margin="985,26,44,33" BorderBrush="{x:Null}" Click="Button_Click"/>
-                <TextBlock Text="{Binding CurrentAccount.TenNV}" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" Foreground="Black" Margin="797,0,0,0"/>
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="LỊCH SỬ HÓA ĐƠN" VerticalAlignment="Center" FontWeight="Bold" FontSize="36" Foreground="Black" Margin="40,0,0,0"/>
+                <Button Content="❌" Background="{x:Null}" FontWeight="Bold" FontSize="40" Foreground="Black" Margin="0,26,33,33" HorizontalAlignment="Right" Width="71" BorderBrush="{x:Null}" Click="Button_Click"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,120,0">
+                    <TextBlock Text="{Binding CurrentAccount.TenNV}" FontWeight="Bold" FontSize="20" Foreground="Black"/>
+                </StackPanel>
             </Grid>
         </Border>
-        <Border BorderBrush="#FFF2EDC2" BorderThickness="1" Grid.Row="1" Margin="30,20,30,20" Background="White" CornerRadius="20,20,20,20">
-            <Grid/>
+
+        <Border BorderBrush="#FFF2EDC2" BorderThickness="1" Grid.Row="1" Margin="30,20,30,20" Background="White" CornerRadius="20">
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="10" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Top" Grid.Row="0" Margin="10">
+                    <TextBlock Text="Lọc dữ liệu:" VerticalAlignment="Center" Margin="0,0,15,0" FontWeight="Bold" />
+                    <StackPanel Orientation="Vertical" Margin="0,0,15,0">
+                        <TextBlock FontSize="11" Text="Từ ngày" Foreground="Gray" />
+                        <DatePicker SelectedDate="{Binding StartDate, Mode=TwoWay}" Width="130" />
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="0,0,15,0">
+                        <TextBlock FontSize="11" Text="Đến ngày" Foreground="Gray" />
+                        <DatePicker SelectedDate="{Binding EndDate, Mode=TwoWay}" Width="130" />
+                    </StackPanel>
+                    <StackPanel Orientation="Vertical" Margin="0,0,15,0">
+                        <TextBlock FontSize="11" Text="Nhân viên lập" Foreground="Gray" />
+                        <ComboBox ItemsSource="{Binding DsNhanVien}" SelectedItem="{Binding SelectedNhanVien}" DisplayMemberPath="TenNV" Width="160" />
+                    </StackPanel>
+                    <Button Content="Lọc danh sách" Command="{Binding FilterCommand}" Margin="10,15,0,0" Padding="15,5" Background="#2E7D32" Foreground="White" Cursor="Hand" />
+                    <Button Content="Xuất Excel" Command="{Binding ExportExcelCommand}" Margin="10,15,0,0" Padding="15,5" Background="#1565C0" Foreground="White" Cursor="Hand" />
+                </StackPanel>
+
+                <DataGrid Grid.Row="2" ItemsSource="{Binding FilteredHoaDon}" AutoGenerateColumns="False" CanUserAddRows="False" 
+                          IsReadOnly="True" GridLinesVisibility="Horizontal" SelectionUnit="FullRow" BorderThickness="0.5" BorderBrush="LightGray">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Mã HD" Binding="{Binding MaHoaDon}" Width="80" />
+                        <DataGridTextColumn Header="Khách hàng" Binding="{Binding KhachHang.TenKhachHang}" Width="180" />
+                        <DataGridTextColumn Header="Bàn" Binding="{Binding MaBan}" Width="70" />
+                        <DataGridTextColumn Header="Ngày lập" Binding="{Binding NgayHoaDon, StringFormat=\{0:dd/MM/yyyy\}}" Width="120" />
+                        <DataGridTextColumn Header="Giờ vào" Binding="{Binding GioVaoHoaDon, StringFormat=\{0:hh\\:mm\}}" Width="90" />
+                        <DataGridTextColumn Header="Giờ ra" Binding="{Binding GioRaHoaDon, StringFormat=\{0:hh\\:mm\}}" Width="90" />
+                        <DataGridTextColumn Header="Thành tiền" Binding="{Binding TongTienHoaDon, StringFormat=N0}" Width="120">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment" Value="Right" />
+                                    <Setter Property="Margin" Value="0,0,10,0" />
+                                    <Setter Property="FontWeight" Value="Bold" />
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                        <DataGridTextColumn Header="Nhân viên" Binding="{Binding NhanVien.TenNV}" Width="*" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
         </Border>
     </Grid>
 </UserControl>

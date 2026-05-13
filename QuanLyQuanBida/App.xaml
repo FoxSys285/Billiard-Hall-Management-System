@@ -4,6 +4,8 @@
              xmlns:local="clr-namespace:QuanLyQuanBida"
              StartupUri="Views/MainWindow.xaml">
     <Application.Resources>
-         
+        <ResourceDictionary xmlns:conv="clr-namespace:QuanLyQuanBida.Converters">
+            <conv:ValueToHeightConverter x:Key="ValueToHeightConverter" />
+        </ResourceDictionary>
     </Application.Resources>
 </Application>

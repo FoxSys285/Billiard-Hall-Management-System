@@ -1,24 +1,437 @@
 ﻿<UserControl x:Class="QuanLyQuanBida.Views.ThongKeView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:QuanLyQuanBida.ViewModels"
-             mc:Ignorable="d" 
-             d:DesignHeight="734" d:DesignWidth="1150"
-             d:DataContext="{d:DesignInstance local:MainViewModel, IsDesignTimeCreatable=True}">
+             mc:Ignorable="d"
+             d:DesignHeight="734" d:DesignWidth="1150">
+
+    <UserControl.Resources>
+        <Style x:Key="StatCardStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="Padding"      Value="20,16"/>
+            <Setter Property="Margin"       Value="8,0"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="8" ShadowDepth="2" Opacity="0.12" Color="#000"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style x:Key="BigNumberStyle" TargetType="TextBlock">
+            <Setter Property="FontSize"   Value="32"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Margin"     Value="0,4,0,0"/>
+        </Style>
+
+        <Style x:Key="CardTitleStyle" TargetType="TextBlock">
+            <Setter Property="FontSize"   Value="13"/>
+            <Setter Property="Foreground" Value="#DDEEFF"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+        </Style>
+
+        <Style x:Key="RefreshBtnStyle" TargetType="Button">
+            <Setter Property="Background"      Value="#1565C0"/>
+            <Setter Property="Foreground"      Value="White"/>
+            <Setter Property="FontWeight"      Value="Bold"/>
+            <Setter Property="FontSize"        Value="13"/>
+            <Setter Property="Height"          Value="36"/>
+            <Setter Property="Padding"         Value="18,0"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="8" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#1976D2"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Style header cột GridView -->
+        <Style x:Key="GvHeaderStyle" TargetType="GridViewColumnHeader">
+            <Setter Property="Background"                 Value="#F5F5F5"/>
+            <Setter Property="Foreground"                 Value="#555"/>
+            <Setter Property="FontWeight"                 Value="Bold"/>
+            <Setter Property="FontSize"                   Value="12"/>
+            <Setter Property="Padding"                    Value="8,6"/>
+            <Setter Property="BorderThickness"            Value="0"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+        </Style>
+
+        <!-- Style từng dòng ListView -->
+        <Style x:Key="GvItemStyle" TargetType="ListViewItem">
+            <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+            <Setter Property="Padding"         Value="0"/>
+            <Setter Property="BorderBrush"     Value="#F0F0F0"/>
+            <Setter Property="BorderThickness" Value="0,0,0,1"/>
+            <Setter Property="Background"      Value="Transparent"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#F9F9F9"/>
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="#E3F2FD"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+
     <Grid Background="#FFE9E9E9">
         <Grid.RowDefinitions>
             <RowDefinition Height="68*"/>
             <RowDefinition Height="299*"/>
         </Grid.RowDefinitions>
-        <Border BorderBrush="#FFF2EDC2" BorderThickness="1" Margin="30,20,30,0" Background="White" CornerRadius="20,20,20,20">
+
+        <!-- ============ HEADER ============ -->
+        <Border BorderBrush="#FFF2EDC2" BorderThickness="1" Margin="30,20,30,0"
+                Background="White" CornerRadius="20">
             <Grid>
-                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="THỐNG KÊ" VerticalAlignment="Center" FontWeight="Bold" FontSize="36" Foreground="Black" Margin="40,0,0,0"/>
-                <Button Content="❌" Click="Button_Click" Background="{x:Null}" FontWeight="Bold" FontSize="40" Foreground="Black" Margin="985,26,44,33" BorderBrush="{x:Null}"/>
-                <TextBlock Text="{Binding CurrentAccount.TenNV}" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" Foreground="Black" Margin="797,0,0,0"/>
+                <StackPanel Orientation="Horizontal" VerticalAlignment="Center" Margin="40,0,0,0">
+                    <TextBlock Text="THỐNG KÊ" FontWeight="Bold" FontSize="36" Foreground="Black"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                            VerticalAlignment="Center" Margin="0,0,44,0">
+                    <TextBlock Text="{Binding CurrentAccount.TenNV}"
+                               FontWeight="Bold" FontSize="20" Foreground="Black"
+                               VerticalAlignment="Center" Margin="0,0,20,0"/>
+                    <Button Content="🔄  Làm mới" Style="{StaticResource RefreshBtnStyle}"
+                            Command="{Binding RefreshThongKeCommand}"/>
+                </StackPanel>
             </Grid>
         </Border>
-        <Border BorderBrush="#FFF2EDC2" BorderThickness="1" Grid.Row="1" Margin="30,20,30,20" Background="White" CornerRadius="20,20,20,20"/>
+
+        <!-- ============ NỘI DUNG CHÍNH ============ -->
+        <Border BorderBrush="#FFF2EDC2" BorderThickness="1" Grid.Row="1"
+                Margin="30,20,30,20" Background="White" CornerRadius="20">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="20">
+                <StackPanel>
+
+                    <!-- ===== HÀNG 1: 4 CARD ===== -->
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <Border Grid.Column="0" Style="{StaticResource StatCardStyle}"
+                                Background="#1565C0" Margin="0,0,8,0">
+                            <StackPanel>
+                                <TextBlock Text="💰 Tổng doanh thu" Style="{StaticResource CardTitleStyle}"/>
+                                <TextBlock Style="{StaticResource BigNumberStyle}">
+                                    <TextBlock.Text>
+                                        <Binding Path="TongDoanhThu" StringFormat="{}{0:N0} đ"/>
+                                    </TextBlock.Text>
+                                </TextBlock>
+                                <TextBlock Text="Hóa đơn đã thanh toán" Foreground="#AACCFF" FontSize="11" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="1" Style="{StaticResource StatCardStyle}" Background="#2e7d32">
+                            <StackPanel>
+                                <TextBlock Text="🧾 Số hóa đơn" Style="{StaticResource CardTitleStyle}"/>
+                                <TextBlock Text="{Binding SoHoaDonDaThanhToan}" Style="{StaticResource BigNumberStyle}"/>
+                                <TextBlock Text="Đã thanh toán xong" Foreground="#AAFFAA" FontSize="11" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="2" Style="{StaticResource StatCardStyle}" Background="#e65100">
+                            <StackPanel>
+                                <TextBlock Text="👥 Khách hàng" Style="{StaticResource CardTitleStyle}"/>
+                                <TextBlock Text="{Binding SoKhachHang}" Style="{StaticResource BigNumberStyle}"/>
+                                <TextBlock Text="Tổng khách đã đăng ký" Foreground="#FFCCAA" FontSize="11" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="3" Style="{StaticResource StatCardStyle}"
+                                Background="#6a1b9a" Margin="8,0,0,0">
+                            <StackPanel>
+                                <TextBlock Text="🎱 Bàn đang chơi" Style="{StaticResource CardTitleStyle}"/>
+                                <TextBlock Text="{Binding SoBanDangHoatDong}" Style="{StaticResource BigNumberStyle}"/>
+                                <TextBlock Text="Đang có khách" Foreground="#DDAAFF" FontSize="11" Margin="0,2,0,0"/>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <!-- ===== HÀNG 2: TOP SP + DOANH THU BÀN ===== -->
+                    <Grid Margin="0,0,0,20">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="1.1*"/>
+                            <ColumnDefinition Width="16"/>
+                            <ColumnDefinition Width="1*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <!-- TOP SẢN PHẨM BÁN CHẠY -->
+                        <Border Grid.Column="0" BorderBrush="#E0E0E0" BorderThickness="1"
+                                CornerRadius="10" Padding="12,12,12,8">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <Border Background="#1565C0" CornerRadius="4" Padding="6,2" Margin="0,0,8,0">
+                                        <TextBlock Text="📋" FontSize="14" Foreground="White"/>
+                                    </Border>
+                                    <TextBlock Text="Top sản phẩm bán chạy"
+                                               FontSize="14" FontWeight="Bold" Foreground="#333"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <ListView Grid.Row="1"
+                                          ItemsSource="{Binding DsTopSanPham}"
+                                          BorderThickness="0" Background="Transparent"
+                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                          MaxHeight="220"
+                                          ItemContainerStyle="{StaticResource GvItemStyle}">
+                                    <ListView.View>
+                                        <GridView ColumnHeaderContainerStyle="{StaticResource GvHeaderStyle}">
+
+                                            <GridViewColumn Header="#" Width="32">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding ViTri}"
+                                                                   FontWeight="Bold" FontSize="12" Foreground="#999"
+                                                                   Margin="4,5"/>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+
+                                            <GridViewColumn Header="Tên sản phẩm" Width="200">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <StackPanel Margin="0,4">
+                                                            <TextBlock Text="{Binding TenSP}" FontWeight="SemiBold" FontSize="12"
+                                                                       TextTrimming="CharacterEllipsis"/>
+                                                            <TextBlock Text="{Binding MaSP}" FontSize="10" Foreground="Gray"/>
+                                                        </StackPanel>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+
+                                            <GridViewColumn Header="SL bán" Width="70">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <Border Background="#E3F2FD" CornerRadius="4"
+                                                                Padding="8,2" Margin="0,3" HorizontalAlignment="Center">
+                                                            <TextBlock Text="{Binding TongSoLuong}"
+                                                                       FontWeight="Bold" FontSize="12"
+                                                                       Foreground="#1565C0" TextAlignment="Center"/>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+
+                                            <GridViewColumn Header="Tổng tiền" Width="105">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock FontWeight="SemiBold" FontSize="12"
+                                                                   Foreground="#2e7d32" Margin="4,5">
+                                                            <TextBlock.Text>
+                                                                <Binding Path="TongTien" StringFormat="{}{0:N0} đ"/>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                            </Grid>
+                        </Border>
+
+                        <!-- DOANH THU THEO BÀN -->
+                        <Border Grid.Column="2" BorderBrush="#E0E0E0" BorderThickness="1"
+                                CornerRadius="10" Padding="12,12,12,8">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                    <Border Background="#e65100" CornerRadius="4" Padding="6,2" Margin="0,0,8,0">
+                                        <TextBlock Text="🎱" FontSize="14" Foreground="White"/>
+                                    </Border>
+                                    <TextBlock Text="Doanh thu theo bàn"
+                                               FontSize="14" FontWeight="Bold" Foreground="#333"
+                                               VerticalAlignment="Center"/>
+                                </StackPanel>
+
+                                <ListView Grid.Row="1"
+                                          ItemsSource="{Binding DsThongKeBan}"
+                                          BorderThickness="0" Background="Transparent"
+                                          ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                          MaxHeight="220"
+                                          ItemContainerStyle="{StaticResource GvItemStyle}">
+                                    <ListView.View>
+                                        <GridView ColumnHeaderContainerStyle="{StaticResource GvHeaderStyle}">
+
+                                            <GridViewColumn Header="Tên bàn" Width="175">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock Text="{Binding TenBan}"
+                                                                   FontWeight="SemiBold" FontSize="12"
+                                                                   Margin="4,5" TextTrimming="CharacterEllipsis"/>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+
+                                            <GridViewColumn Header="Số HD" Width="60">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <Border Background="#FFF3E0" CornerRadius="4"
+                                                                Padding="8,2" Margin="0,3" HorizontalAlignment="Center">
+                                                            <TextBlock Text="{Binding SoHoaDon}"
+                                                                       FontWeight="Bold" FontSize="12"
+                                                                       Foreground="#e65100" TextAlignment="Center"/>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+
+                                            <GridViewColumn Header="Doanh thu" Width="105">
+                                                <GridViewColumn.CellTemplate>
+                                                    <DataTemplate>
+                                                        <TextBlock FontWeight="SemiBold" FontSize="12"
+                                                                   Foreground="#2e7d32" Margin="4,5">
+                                                            <TextBlock.Text>
+                                                                <Binding Path="TongTien" StringFormat="{}{0:N0} đ"/>
+                                                            </TextBlock.Text>
+                                                        </TextBlock>
+                                                    </DataTemplate>
+                                                </GridViewColumn.CellTemplate>
+                                            </GridViewColumn>
+
+                                        </GridView>
+                                    </ListView.View>
+                                </ListView>
+                            </Grid>
+                        </Border>
+                    </Grid>
+
+                    <!-- ===== HÀNG 3: TOP KHÁCH HÀNG ===== -->
+                    <Border BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="10" Padding="12,12,12,8">
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="*"/>
+                            </Grid.RowDefinitions>
+
+                            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                                <Border Background="#6a1b9a" CornerRadius="4" Padding="6,2" Margin="0,0,8,0">
+                                    <TextBlock Text="👑" FontSize="14" Foreground="White"/>
+                                </Border>
+                                <TextBlock Text="Top khách hàng thân thiết (theo điểm tích lũy)"
+                                           FontSize="14" FontWeight="Bold" Foreground="#333"
+                                           VerticalAlignment="Center"/>
+                            </StackPanel>
+
+                            <ListView Grid.Row="1"
+                                      ItemsSource="{Binding DsTopKhachHang}"
+                                      BorderThickness="0" Background="Transparent"
+                                      ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                      MaxHeight="200"
+                                      ItemContainerStyle="{StaticResource GvItemStyle}">
+                                <ListView.View>
+                                    <GridView ColumnHeaderContainerStyle="{StaticResource GvHeaderStyle}">
+
+                                        <GridViewColumn Header="#" Width="44">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Border Width="26" Height="26" CornerRadius="13"
+                                                            HorizontalAlignment="Center" Margin="0,2">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="Background" Value="#9E9E9E"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding HangThuNhat}" Value="True">
+                                                                        <Setter Property="Background" Value="#FFD700"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding HangThuHai}" Value="True">
+                                                                        <Setter Property="Background" Value="#C0C0C0"/>
+                                                                    </DataTrigger>
+                                                                    <DataTrigger Binding="{Binding HangThuBa}" Value="True">
+                                                                        <Setter Property="Background" Value="#CD7F32"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                        <TextBlock Text="{Binding ViTri}"
+                                                                   FontSize="11" FontWeight="Bold" Foreground="White"
+                                                                   HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <GridViewColumn Header="Tên khách hàng" Width="260">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding TenKhachHang}"
+                                                               FontWeight="SemiBold" FontSize="12"
+                                                               Margin="4,5" TextTrimming="CharacterEllipsis"/>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <GridViewColumn Header="Số điện thoại" Width="160">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <TextBlock Text="{Binding SoDienThoai}"
+                                                               FontSize="12" Foreground="#555" Margin="4,5"/>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                        <GridViewColumn Header="Điểm tích lũy" Width="150">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Border CornerRadius="12" Padding="10,3"
+                                                            HorizontalAlignment="Left" Margin="4,3">
+                                                        <Border.Style>
+                                                            <Style TargetType="Border">
+                                                                <Setter Property="Background" Value="#EDE7F6"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding HangThuNhat}" Value="True">
+                                                                        <Setter Property="Background" Value="#FFF8E1"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </Border.Style>
+                                                        <StackPanel Orientation="Horizontal">
+                                                            <TextBlock Text="⭐ " FontSize="11"/>
+                                                            <TextBlock Text="{Binding DiemTichLuy}"
+                                                                       FontWeight="Bold" FontSize="12" Foreground="#6a1b9a"/>
+                                                            <TextBlock Text=" điểm" FontSize="11" Foreground="#6a1b9a"/>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                        </GridViewColumn>
+
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </Grid>
+                    </Border>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
     </Grid>
 </UserControl>
