@@ -24,5 +24,21 @@ namespace QuanLyQuanBida.Views
         {
             InitializeComponent();
         }
+
+        private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is QuanLyQuanBida.ViewModels.MainViewModel vm && sender is PasswordBox pb)
+            {
+                vm.InputMK = pb.Password;
+            }
+        }
+
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (DataContext is QuanLyQuanBida.ViewModels.MainViewModel vm)
+            {
+                PasswordBox.Password = vm.InputMK ?? string.Empty;
+            }
+        }
     }
 }

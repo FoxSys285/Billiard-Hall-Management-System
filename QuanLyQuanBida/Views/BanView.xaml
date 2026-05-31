@@ -4,11 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:local="clr-namespace:QuanLyQuanBida.ViewModels"
+             xmlns:conv="clr-namespace:QuanLyQuanBida.Converters"
              mc:Ignorable="d"
-             d:DesignHeight="734" d:DesignWidth="1150"
-             d:DataContext="{d:DesignInstance local:MainViewModel, IsDesignTimeCreatable=True}">
+             d:DesignHeight="734" d:DesignWidth="1150">
 
     <UserControl.Resources>
+
+        <!-- Converters -->
+        <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+        <conv:GreaterThanZeroConverter x:Key="GreaterThanZeroConverter"/>
+        <conv:CalcFoodAmountConverter x:Key="CalcFoodAmountConverter"/>
 
         <!-- Màu card bàn: xanh lá = trống, xanh dương = có khách -->
         <Style x:Key="TrangThaiColorStyle" TargetType="Border">
@@ -29,7 +34,7 @@
         </Style>
 
         <!-- Template bàn lỗ -->
-        <DataTemplate x:Key="BanLoTemplate">
+        <DataTemplate x:Key="BanLo">
             <Border Width="140" Height="90" Style="{StaticResource TrangThaiColorStyle}" CornerRadius="8" Margin="10">
                 <Grid>
                     <Ellipse Fill="White" Width="12" Height="12" HorizontalAlignment="Left"   VerticalAlignment="Top"    Margin="-2"/>
@@ -45,7 +50,7 @@
         </DataTemplate>
 
         <!-- Template bàn phẳng -->
-        <DataTemplate x:Key="BanPhangTemplate">
+        <DataTemplate x:Key="BanPhang">
             <Border Width="140" Height="90" Style="{StaticResource TrangThaiColorStyle}" CornerRadius="8" Margin="10">
                 <Grid>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="0,0,0,5">
@@ -93,16 +98,13 @@
 
         <!-- ===== HEADER ===== -->
         <Border BorderBrush="#FFF2EDC2" BorderThickness="1" Margin="30,20,30,0"
-                Background="White" CornerRadius="20">
+                Background="White" CornerRadius="20,20,20,20">
             <Grid>
                 <TextBlock Text="BÀN" HorizontalAlignment="Left" VerticalAlignment="Center"
                            FontWeight="Bold" FontSize="36" Foreground="Black" Margin="40,0,0,0"/>
                 <TextBlock Text="{Binding CurrentAccount.TenNV}" HorizontalAlignment="Left"
                            VerticalAlignment="Center" FontWeight="Bold" FontSize="20"
                            Foreground="Black" Margin="797,0,0,0"/>
-                <Button Content="❌" Background="{x:Null}" FontWeight="Bold" FontSize="40"
-                        Foreground="Black" Margin="985,26,44,33"
-                        BorderBrush="{x:Null}" Click="Button_Click"/>
             </Grid>
         </Border>
 
@@ -157,12 +159,25 @@
                                     <ContentControl Content="{Binding}">
                                         <ContentControl.Style>
                                             <Style TargetType="ContentControl">
+                                                <Setter Property="ContentTemplate" Value="{StaticResource BanPhang}"/>
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding KieuBan}" Value="BanLoTemple">
-                                                        <Setter Property="ContentTemplate" Value="{StaticResource BanLoTemplate}"/>
+                                                        <Setter Property="ContentTemplate" Value="{StaticResource BanLo}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding KieuBan}" Value="BanLo">
+                                                        <Setter Property="ContentTemplate" Value="{StaticResource BanLo}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding KieuBan}" Value="Bàn lỗ">
+                                                        <Setter Property="ContentTemplate" Value="{StaticResource BanLo}"/>
                                                     </DataTrigger>
                                                     <DataTrigger Binding="{Binding KieuBan}" Value="BanPhangTemple">
-                                                        <Setter Property="ContentTemplate" Value="{StaticResource BanPhangTemplate}"/>
+                                                        <Setter Property="ContentTemplate" Value="{StaticResource BanPhang}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding KieuBan}" Value="BanPhang">
+                                                        <Setter Property="ContentTemplate" Value="{StaticResource BanPhang}"/>
+                                                    </DataTrigger>
+                                                    <DataTrigger Binding="{Binding KieuBan}" Value="Bàn phẳng">
+                                                        <Setter Property="ContentTemplate" Value="{StaticResource BanPhang}"/>
                                                     </DataTrigger>
                                                 </Style.Triggers>
                                             </Style>
@@ -180,6 +195,7 @@
                 <Grid Grid.Column="1" Margin="20">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
@@ -196,44 +212,62 @@
                                        FontWeight="Bold" Foreground="Blue"/>
                         </StackPanel>
 
-                        <!-- Trạng thái: bind TrangThaiHienTai → "Trống" / "Có khách" -->
+                        <!-- Trạng thái + Giờ chơi: cùng dòng -->
                         <StackPanel Orientation="Horizontal" Margin="0,5">
-                            <TextBlock Text="Trạng thái: " FontWeight="SemiBold"/>
-                            <TextBlock Text="{Binding TrangThaiHienTai}" Margin="5,0,0,0" FontWeight="SemiBold">
-                                <TextBlock.Style>
-                                    <Style TargetType="TextBlock">
-                                        <Setter Property="Foreground" Value="#2e7d32"/>
+                            <!-- Trạng thái -->
+                            <StackPanel Orientation="Horizontal" Margin="0,0,30,0">
+                                <TextBlock Text="Trạng thái: " FontWeight="SemiBold"/>
+                                <TextBlock Text="{Binding TrangThaiHienTai}" Margin="5,0,0,0" FontWeight="SemiBold">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Foreground" Value="#2e7d32"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SelectedBan.TrangThaiBan}" Value="True">
+                                                    <Setter Property="Foreground" Value="OrangeRed"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </StackPanel>
+
+                            <!-- Giờ chơi: chỉ hiện khi bàn có khách (TrangThaiBan=True) -->
+                            <StackPanel Orientation="Horizontal">
+                                <StackPanel.Style>
+                                    <Style TargetType="StackPanel">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
                                         <Style.Triggers>
                                             <DataTrigger Binding="{Binding SelectedBan.TrangThaiBan}" Value="True">
-                                                <Setter Property="Foreground" Value="OrangeRed"/>
+                                                <Setter Property="Visibility" Value="Visible"/>
                                             </DataTrigger>
                                         </Style.Triggers>
                                     </Style>
-                                </TextBlock.Style>
-                            </TextBlock>
-                        </StackPanel>
-
-                        <!-- Giờ chơi: chỉ hiện khi bàn có khách (TrangThaiBan=True) -->
-                        <StackPanel Orientation="Horizontal" Margin="0,5">
-                            <StackPanel.Style>
-                                <Style TargetType="StackPanel">
-                                    <Setter Property="Visibility" Value="Collapsed"/>
-                                    <Style.Triggers>
-                                        <DataTrigger Binding="{Binding SelectedBan.TrangThaiBan}" Value="True">
-                                            <Setter Property="Visibility" Value="Visible"/>
-                                        </DataTrigger>
-                                    </Style.Triggers>
-                                </Style>
-                            </StackPanel.Style>
-                            <TextBlock Text="Giờ chơi: " FontWeight="SemiBold"/>
-                            <TextBlock Text="{Binding GioVaoBan}" Foreground="Gray" Margin="5,0,0,0"/>
+                                </StackPanel.Style>
+                                <TextBlock Text="Giờ chơi: " FontWeight="SemiBold"/>
+                                <TextBlock Text="{Binding GioVaoBan}" Foreground="Gray" Margin="5,0,0,0"/>
+                            </StackPanel>
                         </StackPanel>
                     </StackPanel>
 
+                    <!-- Nút xóa/sửa số lượng -->
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,0,0,8" HorizontalAlignment="Center">
+                        <Button Content="➖ Giảm SL" Height="32" Padding="10,0" Margin="0,0,5,0"
+                                Background="#FF9800" Foreground="White" FontWeight="Bold" FontSize="11"
+                                Command="{Binding GiamSoLuongMonTrenBanCommand}"/>
+                        <Button Content="➕ Tăng SL" Height="32" Padding="10,0" Margin="0,0,5,0"
+                                Background="#4CAF50" Foreground="White" FontWeight="Bold" FontSize="11"
+                                Command="{Binding TangSoLuongMonTrenBanCommand}"/>
+                        <Button Content="🗑️  Xóa món" Height="32" Padding="10,0"
+                                Background="#c62828" Foreground="White" FontWeight="Bold" FontSize="11"
+                                Command="{Binding XoaMonTrenBanCommand}"/>
+                    </StackPanel>
+
                     <!-- Danh sách món đang có trên bàn — bind DsMonAnCuaBan -->
-                    <ListView Grid.Row="1" Margin="0,10,0,10"
-                              ItemsSource="{Binding DsMonAnCuaBan}"
-                              BorderBrush="#FFCCCCCC" BorderThickness="1">
+                    <ListView Grid.Row="2" Margin="0,0,0,10" MaxHeight="140"
+                              ItemsSource="{Binding DsMonAnCuaBan, UpdateSourceTrigger=PropertyChanged}"
+                              SelectedItem="{Binding SelectedDatMon}"
+                              BorderBrush="#FFCCCCCC" BorderThickness="1"
+                              >
                         <ListView.View>
                             <GridView>
                                 <GridViewColumn Header="Tên món"    Width="140"
@@ -252,13 +286,55 @@
                         </ListView.View>
                     </ListView>
 
-                    <!-- Tổng tiền + 3 nút -->
-                    <StackPanel Grid.Row="2" Margin="0,10,0,0">
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,15">
-                            <TextBlock Text="Tổng tiền: " FontWeight="Bold" FontSize="16"/>
-                            <TextBlock FontWeight="Bold" FontSize="16" Foreground="Red" Margin="5,0,10,0"
-                                       Text="{Binding TongTienHienTai, StringFormat={}{0:N0} VNĐ}"/>
+                    <!-- Chi tiết tiền bàn + tổng tiền -->
+                    <StackPanel Grid.Row="3" Margin="0,10,0,0">
+                        <!-- Hiển thị khi bàn có khách -->
+                        <StackPanel Visibility="{Binding SelectedBan.TrangThaiBan, Converter={StaticResource BoolToVisibilityConverter}}">
+                            <Border Background="#F5F5F5" Padding="10" CornerRadius="5" Margin="0,0,0,10">
+                                <StackPanel>
+                                    <!-- Tiền đồ ăn/uống -->
+                                    <StackPanel Orientation="Horizontal" Margin="0,3">
+                                        <TextBlock Text="Tiền đồ ăn/uống:" Width="140" FontSize="11"/>
+                                        <TextBlock FontSize="11" TextAlignment="Right" Width="80" Foreground="#333">
+                                            <TextBlock.Text>
+                                                <MultiBinding Converter="{StaticResource CalcFoodAmountConverter}">
+                                                    <Binding Path="TongTienTruocGiamGia"/>
+                                                    <Binding Path="TienBan"/>
+                                                </MultiBinding>
+                                            </TextBlock.Text>
+                                        </TextBlock>
+                                        <TextBlock Text=" đ" FontSize="11"/>
+                                    </StackPanel>
+                                    <!-- Tiền bàn chơi -->
+                                    <StackPanel Orientation="Horizontal" Margin="0,3">
+                                        <TextBlock Text="Tiền bàn chơi:" Width="140" FontSize="11" Foreground="DarkGreen" FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding TienBan, StringFormat={}{0:N0}}" 
+                                                   FontSize="11" TextAlignment="Right" Width="80" Foreground="DarkGreen" FontWeight="SemiBold"/>
+                                        <TextBlock Text=" đ" FontSize="11" Foreground="DarkGreen"/>
+                                    </StackPanel>
+                                    <!-- Đường phân cách -->
+                                    <Separator Background="#DDD" Margin="0,5"/>
+                                    <!-- Tổng trước giảm giá -->
+                                    <StackPanel Orientation="Horizontal" Margin="0,3">
+                                        <TextBlock Text="Tổng trước giảm:" Width="140" FontSize="11" FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding TongTienTruocGiamGia, StringFormat={}{0:N0}}" 
+                                                   FontSize="11" TextAlignment="Right" Width="80" FontWeight="SemiBold"/>
+                                        <TextBlock Text=" đ" FontSize="11" FontWeight="SemiBold"/>
+                                    </StackPanel>
+                                    <!-- Giảm giá (nếu có) -->
+                                    <StackPanel Orientation="Horizontal" Margin="0,3" 
+                                                Visibility="{Binding SoTienGiamGia, Converter={StaticResource GreaterThanZeroConverter}}">
+                                        <TextBlock Text="Giảm giá:" Width="140" FontSize="11" Foreground="OrangeRed" FontWeight="SemiBold"/>
+                                        <TextBlock Text="{Binding LoaiHoiVien}" Width="40" FontSize="10" Foreground="OrangeRed"/>
+                                        <TextBlock Text="-" Foreground="OrangeRed"/>
+                                        <TextBlock Text="{Binding SoTienGiamGia, StringFormat={}{0:N0}}" 
+                                                   FontSize="11" TextAlignment="Right" Width="35" Foreground="OrangeRed" FontWeight="SemiBold"/>
+                                        <TextBlock Text=" đ" FontSize="11" Foreground="OrangeRed"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
                         </StackPanel>
+                        <!-- 3 nút chính -->
                         <Button Content="Đặt Bàn"     Height="35" Margin="0,0,0,5"
                                 Background="Green" Foreground="White" FontWeight="Bold"
                                 Command="{Binding DatBanCommand}"/>
@@ -275,7 +351,7 @@
                      OVERLAY ĐẶT BÀN
                      Hiện khi IsShowDatBanOverlay = True
                      ================================================= -->
-                <Grid Grid.ColumnSpan="2" Panel.ZIndex="99" Background="#88000000">
+                <Grid Grid.ColumnSpan="2" Panel.ZIndex="99" Background="#88000000" d:Visibility="Visible">
                     <Grid.Style>
                         <Style TargetType="Grid">
                             <Setter Property="Visibility" Value="Collapsed"/>
@@ -315,78 +391,283 @@
                                 </Grid>
                             </Border>
 
-                            <!-- TabControl: SelectedIndex bind vào ActiveOverlayTab -->
-                            <TabControl Grid.Row="1"
-                                        SelectedIndex="{Binding ActiveOverlayTab, Mode=TwoWay}"
-                                        BorderThickness="0" Background="White">
+                            <!-- Tab header: Buttons Focusable=False, không nhận keyboard -->
+                            <Border Grid.Row="1" BorderBrush="#E0E0E0" BorderThickness="0,0,0,1" Background="White">
+                                <StackPanel Orientation="Horizontal">
+                                    <!-- Nút tab Khách hàng -->
+                                    <Border Padding="20,10" Cursor="Hand">
+                                        <Border.InputBindings>
+                                            <MouseBinding MouseAction="LeftClick" Command="{Binding SetTabKhachHangCommand}"/>
+                                        </Border.InputBindings>
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="BorderThickness" Value="0,0,0,3"/>
+                                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ActiveOverlayTab}" Value="0">
+                                                        <Setter Property="BorderBrush" Value="#1565C0"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock Text="👤  Khách hàng" FontSize="13" FontWeight="SemiBold">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="#777"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ActiveOverlayTab}" Value="0">
+                                                            <Setter Property="Foreground" Value="#1565C0"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Border>
+                                    <!-- Nút tab Đặt món -->
+                                    <Border Padding="20,10" Cursor="Hand">
+                                        <Border.InputBindings>
+                                            <MouseBinding MouseAction="LeftClick" Command="{Binding SetTabDatMonCommand}"/>
+                                        </Border.InputBindings>
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="BorderThickness" Value="0,0,0,3"/>
+                                                <Setter Property="BorderBrush" Value="Transparent"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding ActiveOverlayTab}" Value="1">
+                                                        <Setter Property="BorderBrush" Value="#1565C0"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                        <TextBlock Text="🍽️  Đặt món" FontSize="13" FontWeight="SemiBold">
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Foreground" Value="#777"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ActiveOverlayTab}" Value="1">
+                                                            <Setter Property="Foreground" Value="#1565C0"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Border>
+                                </StackPanel>
+                            </Border>
+
+                            <!-- Nội dung tab — Grid ẩn/hiện bằng DataTrigger, KHÔNG dùng TabControl -->
+                            <Grid Grid.Row="1" Margin="0,44,0,0" Background="White">
 
                                 <!-- ===== TAB 0: KHÁCH HÀNG ===== -->
-                                <TabItem Header="👤  Khách hàng" FontSize="13" FontWeight="SemiBold">
-                                    <Grid Margin="40,20">
-                                        <StackPanel MaxWidth="500" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <Grid>
+                                    <Grid.Style>
+                                        <Style TargetType="Grid">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ActiveOverlayTab}" Value="0">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Grid.Style>
 
-                                            <TextBlock Text="Nhập số điện thoại để tìm khách hàng cũ"
-                                                       FontSize="13" Foreground="#777"
-                                                       HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                                    <Grid Margin="40,10" MaxWidth="520" HorizontalAlignment="Center" VerticalAlignment="Stretch">
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="*"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                            <RowDefinition Height="Auto"/>
+                                        </Grid.RowDefinitions>
 
-                                            <!-- SĐT -->
-                                            <Grid Margin="0,0,0,12">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="130"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Text="Số điện thoại:"
-                                                           VerticalAlignment="Center" FontWeight="SemiBold"/>
-                                                <TextBox Grid.Column="1" Height="34" Padding="8,4" FontSize="13"
-                                                         Text="{Binding DatBan_SDT, UpdateSourceTrigger=PropertyChanged}"/>
-                                            </Grid>
+                                        <Border Grid.Row="0" Background="#F0F0F0" CornerRadius="12" Padding="5" Margin="0,0,0,15" HorizontalAlignment="Center">
+                                            <StackPanel Orientation="Horizontal">
+                                                <Border CornerRadius="8" Padding="18,8" Cursor="Hand" Margin="0,0,2,0">
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="Background" Value="Transparent"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsHoiVien}" Value="True">
+                                                                    <Setter Property="Background" Value="#1565C0"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
+                                                    <Border.InputBindings>
+                                                        <MouseBinding MouseAction="LeftClick" Command="{Binding SetHoiVienCommand}"/>
+                                                    </Border.InputBindings>
+                                                    <TextBlock Text="🪙  Hội viên" FontSize="13" FontWeight="SemiBold">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Foreground" Value="#555"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsHoiVien}" Value="True">
+                                                                        <Setter Property="Foreground" Value="White"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </Border>
 
-                                            <!-- Thông báo tìm KH -->
-                                            <Border Background="#F0F4FF" CornerRadius="6" Padding="10,6" Margin="0,0,0,12">
-                                                <Border.Style>
-                                                    <Style TargetType="Border">
-                                                        <Setter Property="Visibility" Value="Visible"/>
-                                                        <Style.Triggers>
-                                                            <DataTrigger Binding="{Binding ThongBaoTimKH}" Value="">
-                                                                <Setter Property="Visibility" Value="Collapsed"/>
-                                                            </DataTrigger>
-                                                        </Style.Triggers>
-                                                    </Style>
-                                                </Border.Style>
-                                                <TextBlock Text="{Binding ThongBaoTimKH}"
-                                                           FontSize="12" TextWrapping="Wrap"/>
-                                            </Border>
+                                                <Border CornerRadius="8" Padding="18,8" Cursor="Hand">
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="Background" Value="Transparent"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsKhachThuong}" Value="True">
+                                                                    <Setter Property="Background" Value="#e65100"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
+                                                    <Border.InputBindings>
+                                                        <MouseBinding MouseAction="LeftClick" Command="{Binding SetKhachThuongCommand}"/>
+                                                    </Border.InputBindings>
+                                                    <TextBlock Text="👤  Khách thường" FontSize="13" FontWeight="SemiBold">
+                                                        <TextBlock.Style>
+                                                            <Style TargetType="TextBlock">
+                                                                <Setter Property="Foreground" Value="#555"/>
+                                                                <Style.Triggers>
+                                                                    <DataTrigger Binding="{Binding IsKhachThuong}" Value="True">
+                                                                        <Setter Property="Foreground" Value="White"/>
+                                                                    </DataTrigger>
+                                                                </Style.Triggers>
+                                                            </Style>
+                                                        </TextBlock.Style>
+                                                    </TextBlock>
+                                                </Border>
+                                            </StackPanel>
+                                        </Border>
 
-                                            <!-- Họ tên -->
-                                            <Grid Margin="0,0,0,12">
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="130"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Text="Họ và tên:"
-                                                           VerticalAlignment="Center" FontWeight="SemiBold"/>
-                                                <TextBox Grid.Column="1" Height="34" Padding="8,4" FontSize="13"
-                                                         Text="{Binding DatBan_TenKH, UpdateSourceTrigger=PropertyChanged}"/>
-                                            </Grid>
+                                        <Grid Grid.Row="1" Margin="0,0,0,10">
+                                            <Grid.Style>
+                                                <Style TargetType="Grid">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsKhachThuong}" Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Grid.Style>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                            </Grid.RowDefinitions>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="130"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
 
-                                            <!-- Điểm tích lũy -->
-                                            <Grid>
-                                                <Grid.ColumnDefinitions>
-                                                    <ColumnDefinition Width="130"/>
-                                                    <ColumnDefinition Width="*"/>
-                                                </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Text="Điểm tích lũy:"
-                                                           VerticalAlignment="Center" FontWeight="SemiBold"/>
-                                                <TextBlock Grid.Column="1" VerticalAlignment="Center"
-                                                           Margin="8,0" Foreground="#6a1b9a" FontWeight="Bold"
-                                                           Text="{Binding DatBan_DiemTichLuy, StringFormat={}{0} điểm}"/>
-                                            </Grid>
-                                        </StackPanel>
+                                            <TextBlock Grid.Row="0" Grid.ColumnSpan="2" Text="Nhập SĐT để tìm khách hàng cũ tự động"
+                       FontSize="12" Foreground="#888" HorizontalAlignment="Center" Margin="0,0,0,8"/>
+
+                                            <TextBlock Grid.Row="1" Grid.Column="0" Text="Số điện thoại:" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                            <TextBox Grid.Row="1" Grid.Column="1" Height="34" Padding="8,4" FontSize="13"
+                     Text="{Binding DatBan_SDT, UpdateSourceTrigger=PropertyChanged}"/>
+
+                                            <DataGrid Grid.Row="2" Grid.ColumnSpan="2" Margin="0,10,0,0" MaxHeight="140" 
+                      ItemsSource="{Binding FilteredDsKhachHang}"
+                      SelectedItem="{Binding SelectedKhachHangDatBan, Mode=TwoWay}"
+                      VerticalScrollBarVisibility="Auto" IsReadOnly="True" AutoGenerateColumns="False">
+                                                <DataGrid.Columns>
+                                                    <DataGridTextColumn Header="Mã" Binding="{Binding MaKhachHang}" Width="60"/>
+                                                    <DataGridTextColumn Header="Tên khách hàng" Binding="{Binding TenKhachHang}" Width="160"/>
+                                                    <DataGridTextColumn Header="Số điện thoại" Binding="{Binding SoDienThoai}" Width="*"/>
+                                                </DataGrid.Columns>
+                                            </DataGrid>
+                                        </Grid>
+
+                                        <Border Grid.Row="2" Background="#F0F4FF" CornerRadius="6" Padding="10,6" Margin="0,0,0,10">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding ThongBaoTimKH}" Value="">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <TextBlock Text="{Binding ThongBaoTimKH}" FontSize="12" TextWrapping="Wrap"/>
+                                        </Border>
+
+                                        <!-- Hiển thị thông tin khách hàng được chọn -->
+                                        <Border Grid.Row="3" Background="#E8F5E9" CornerRadius="6" Padding="12,8" Margin="0,0,0,10" x:Name="SelectedCustomerBorder">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding DatBan_TenKH}" Value="">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <StackPanel>
+                                                <StackPanel Orientation="Horizontal" Margin="0,0,0,5">
+                                                    <TextBlock Text="✓ Mã khách:" FontWeight="SemiBold" Foreground="#2e7d32"/>
+                                                    <TextBlock Text="{Binding DatBan_MaKH}" Margin="8,0,0,0" Foreground="#1565C0" FontWeight="Bold"/>
+                                                </StackPanel>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="✓ Tên khách:" FontWeight="SemiBold" Foreground="#2e7d32"/>
+                                                    <TextBlock Text="{Binding DatBan_TenKH}" Margin="8,0,0,0" Foreground="#1565C0" FontWeight="Bold" TextTrimming="CharacterEllipsis"/>
+                                                </StackPanel>
+                                            </StackPanel>
+                                        </Border>
+
+                                        <Grid Grid.Row="4" Margin="0,5">
+                                            <Grid.Style>
+                                                <Style TargetType="Grid">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsKhachThuong}" Value="True">
+                                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Grid.Style>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="130"/>
+                                                <ColumnDefinition Width="*"/>
+                                            </Grid.ColumnDefinitions>
+                                            <TextBlock Grid.Column="0" Text="Điểm tích lũy:" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                                            <TextBlock Grid.Column="1" VerticalAlignment="Center" Margin="8,0" Foreground="#6a1b9a" FontWeight="Bold"
+                       Text="{Binding DatBan_DiemTichLuy, StringFormat={}{0} điểm}"/>
+                                        </Grid>
+
+                                        <Border Grid.Row="5" Margin="0,10,0,0" Background="#FFF3E0" CornerRadius="8" Padding="12,8">
+                                            <Border.Style>
+                                                <Style TargetType="Border">
+                                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsKhachThuong}" Value="True">
+                                                            <Setter Property="Visibility" Value="Visible"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Style>
+                                            <TextBlock FontSize="12" Foreground="#e65100" TextWrapping="Wrap"
+                       Text="ℹ️  Khách thường sẽ không được tích điểm và không lưu vào danh sách hội viên."/>
+                                        </Border>
                                     </Grid>
-                                </TabItem>
+                                </Grid>
 
                                 <!-- ===== TAB 1: ĐẶT MÓN ===== -->
-                                <TabItem Header="🍽️  Đặt món" FontSize="13" FontWeight="SemiBold">
+                                <Grid>
+                                    <Grid.Style>
+                                        <Style TargetType="Grid">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding ActiveOverlayTab}" Value="1">
+                                                    <Setter Property="Visibility" Value="Visible"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </Grid.Style>
                                     <Grid>
                                         <Grid.ColumnDefinitions>
                                             <ColumnDefinition Width="220"/>
@@ -537,22 +818,14 @@
                                             </Grid>
                                         </Border>
                                     </Grid>
-                                </TabItem>
-                            </TabControl>
+                                </Grid>
+                            </Grid>
 
                             <!-- Footer -->
                             <Border Grid.Row="2" BorderBrush="#E0E0E0" BorderThickness="0,1,0,0">
                                 <Grid Margin="20,0">
                                     <!-- Tóm tắt đơn -->
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <TextBlock Text="Số món: " FontWeight="SemiBold" FontSize="13"/>
-                                        <TextBlock Text="{Binding DsDatMon.Count}"
-                                                   Foreground="#1565C0" FontWeight="Bold"
-                                                   FontSize="13" Margin="0,0,16,0"/>
-                                        <TextBlock Text="Tổng tạm: " FontWeight="SemiBold" FontSize="13"/>
-                                        <TextBlock Foreground="Red" FontWeight="Bold" FontSize="13"
-                                                   Text="{Binding TongTienDatMon, StringFormat={}{0:N0} VNĐ}"/>
-                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center"/>
                                     <!-- Nút Hủy + Xác nhận -->
                                     <StackPanel Orientation="Horizontal"
                                                 HorizontalAlignment="Right" VerticalAlignment="Center">

@@ -12,14 +12,13 @@ namespace QuanLyQuanBida.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class ChiTietPhieuNhap
+    public partial class Kho
     {
-        public string IdPhieuNhap { get; set; }
-        public string IdSanPham { get; set; }
-        public Nullable<int> SoLuong { get; set; }
-        public Nullable<double> DonGia { get; set; }
+        public string MaSP { get; set; }
+        public string TenSanPham { get; set; }
+        public string DonViTinh { get; set; }
+        public Nullable<int> TonKho { get; set; }
     
-        public virtual PhieuNhap PhieuNhap { get; set; }
         public virtual SanPham SanPham { get; set; }
     }
 }

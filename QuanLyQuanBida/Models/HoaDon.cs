@@ -22,12 +22,13 @@ namespace QuanLyQuanBida.Models
     
         public string MaHoaDon { get; set; }
         public string MaBan { get; set; }
+        public string MaNV { get; set; }
         public string MaKhachHang { get; set; }
+        public Nullable<System.DateTime> NgayHoaDon { get; set; }
         public Nullable<System.TimeSpan> GioVaoHoaDon { get; set; }
         public Nullable<System.TimeSpan> GioRaHoaDon { get; set; }
         public Nullable<bool> TrangThaiThanhToan { get; set; }
         public Nullable<double> TongTienHoaDon { get; set; }
-        public string MaNV { get; set; }
     
         public virtual Ban Ban { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]

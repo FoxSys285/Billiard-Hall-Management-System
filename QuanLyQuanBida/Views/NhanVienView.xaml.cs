@@ -29,6 +29,44 @@ namespace QuanLyQuanBida.Views
         {
             Application.Current.Shutdown();
         }
+        // Lọc chỉ cho phép nhập số cho TextBox lương cơ bản
+        private void TextBox_PreviewTextInput_NumericOnly(object sender, TextCompositionEventArgs e)
+        {
+            // Chỉ cho phép nhập: số 0-9, dấu chấm (.), và dấu âm (-)
+            if (!char.IsDigit(e.Text, 0) && e.Text != "." && e.Text != "-")
+            {
+                e.Handled = true;
+                return;
+            }
+
+            TextBox tb = sender as TextBox;
+            if (tb != null)
+            {
+                string newText = tb.Text.Insert(tb.CaretIndex, e.Text);
+
+                // Không cho phép nhiều dấu chấm
+                if (e.Text == "." && newText.Count(c => c == '.') > 1)
+                {
+                    e.Handled = true;
+                    return;
+                }
+
+                // Không cho phép dấu âm ở giữa
+                if (e.Text == "-" && tb.CaretIndex != 0)
+                {
+                    e.Handled = true;
+                    return;
+                }
+
+                // Không cho phép dấu chấm ở đầu hoặc cuối
+                if (e.Text == "." && (tb.CaretIndex == 0 || tb.CaretIndex == tb.Text.Length))
+                {
+                    e.Handled = true;
+                    return;
+                }
+            }
+        }
+        
         private void MonthYearPicker_CalendarOpened(object sender, RoutedEventArgs e)
         {
             // Tìm Calendar bên trong DatePicker

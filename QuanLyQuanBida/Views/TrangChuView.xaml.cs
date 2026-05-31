@@ -33,7 +33,14 @@ namespace QuanLyQuanBida.Views
                 {
                     vm.LoadFullData();
                 }
-                catch { /* swallow to avoid crashing UI if DB unavailable at design time */ }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"TrangChu load error: {ex.Message}\n{ex.StackTrace}", "Debug", MessageBoxButton.OK, MessageBoxImage.Error);
+                }
+            }
+            else
+            {
+                MessageBox.Show($"TrangChu.Loaded: DataContext is {(DataContext == null ? "null" : DataContext.GetType().FullName)}", "Debug", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
         private void Button_Click(object sender, RoutedEventArgs e)

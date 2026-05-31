@@ -5,8 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuanLyQuanBida.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="734" d:DesignWidth="1150"
-             d:DataContext="{d:DesignInstance local:MainViewModel, IsDesignTimeCreatable=True}">
+             d:DesignHeight="734" d:DesignWidth="1150">
 
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
@@ -46,13 +45,10 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
 
-            <Border BorderBrush="#FFF2EDC2" BorderThickness="1" Margin="30,20,30,0" Background="White" CornerRadius="20">
+            <Border BorderBrush="#FFF2EDC2" BorderThickness="1" Margin="30,20,30,0" Background="White" CornerRadius="20,20,20,20">
                 <Grid>
-                    <TextBlock HorizontalAlignment="Left" Text="Khách Hàng" VerticalAlignment="Center" FontWeight="Bold" FontSize="36" Foreground="Black" Margin="40,0,0,0"/>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,40,0">
-                        <TextBlock Text="{Binding CurrentAccount.TenNV}" FontWeight="Bold" FontSize="20" VerticalAlignment="Center" Margin="0,0,20,0"/>
-                        <Button Content="❌" Background="Transparent" Foreground="Black" FontSize="50" BorderThickness="0" Cursor="Hand" Margin="10,0" Click="Button_Click"/>
-                    </StackPanel>
+                    <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="KHÁCH HÀNG" VerticalAlignment="Center" FontWeight="Bold" FontSize="36" Foreground="Black" Margin="40,0,0,0"/>
+                    <TextBlock Text="{Binding CurrentAccount.TenNV}" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" Foreground="Black" Margin="797,0,0,0"/>
                 </Grid>
             </Border>
 
@@ -79,15 +75,15 @@
                         <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Bottom">
                             <Button Content="Thêm" Style="{StaticResource ActionButtonStyle}" 
                                     Width="130" Height="45" Margin="0,0,10,0"
-                                    Command="{Binding OpenAddCommand}"/>
+                                    Command="{Binding MoThemKhachHangCommand}"/>
 
                             <Button Content="Sửa" Style="{StaticResource ActionButtonStyle}" 
                                     Width="130" Height="45" Margin="0,0,10,0"
-                                    Command="{Binding OpenEditCommand}"/>
+                                    Command="{Binding MoSuaKhachHangCommand}"/>
 
                             <Button Content="Xóa" Style="{StaticResource ActionButtonStyle}" 
                                     Width="130" Height="45"
-                                    Command="{Binding DeleteKhachHangCommand}"/>
+                                    Command="{Binding XoaKhachHangCommand}"/>
                         </StackPanel>
                     </Grid>
 
@@ -97,8 +93,7 @@
                         <DataGrid.Columns>
                             <DataGridTextColumn Header="Mã khách hàng" Binding="{Binding MaKhachHang}" Width="180"/>
                             <DataGridTextColumn Header="Họ tên" Binding="{Binding TenKhachHang}" Width="*"/>
-                            <DataGridTextColumn Header="SĐT" Binding="{Binding SoDienThoai}" Width="180"/>
-                            <DataGridTextColumn Header="Email" Binding="{Binding Email}" Width="230"/>
+                            <DataGridTextColumn Header="SĐT" Binding="{Binding SoDienThoai}" Width="250"/>
                             <DataGridTextColumn Header="Số điểm" Binding="{Binding DiemTichLuy}" Width="120"/>
                         </DataGrid.Columns>
                     </DataGrid>
@@ -120,7 +115,7 @@
 
                     <Grid Grid.Row="0">
                         <TextBlock Text="THÔNG TIN KHÁCH HÀNG" FontWeight="Bold" FontSize="18" Foreground="#4e6e5d" VerticalAlignment="Center"/>
-                        <Button Content="✕" Command="{Binding CloseAddCommand}" HorizontalAlignment="Right" 
+                        <Button Content="✕" Command="{Binding DongThemKhachHangCommand}" HorizontalAlignment="Right" 
                                 Background="Transparent" BorderThickness="0" FontSize="20" Cursor="Hand" Foreground="#666666"/>
                     </Grid>
 
@@ -143,11 +138,9 @@
                         <TextBlock Text="Số điện thoại" Foreground="#AAAAAA" FontSize="13" Margin="0,0,0,5"/>
                         <TextBox Text="{Binding AddSDT, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}" Margin="0,0,0,20"/>
 
-                        <TextBlock Text="Email" Foreground="#AAAAAA" FontSize="13" Margin="0,0,0,5"/>
-                        <TextBox Text="{Binding AddEmail, UpdateSourceTrigger=PropertyChanged}" Style="{StaticResource ModernTextBox}"/>
                     </StackPanel>
 
-                    <Button Grid.Row="2" Content="LƯU THÔNG TIN" Command="{Binding ConfirmAddCommand}"
+                    <Button Grid.Row="2" Content="LƯU THÔNG TIN" Command="{Binding XacNhanThemKhachHangCommand}"
                             Style="{StaticResource ActionButtonStyle}" Height="50" FontSize="18"/>
                 </Grid>
             </Border>

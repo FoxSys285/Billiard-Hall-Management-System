@@ -4,24 +4,24 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="a709c411d9c5401bb8e8457a3508ef9a" Name="Diagram1">
+      <Diagram DiagramId="9701d78c316b4a2c80ee2815f87d6ce3" Name="Diagram1">
         <EntityTypeShape EntityType="QUANLYBIDAModel.Ban" Width="1.5" PointX="3.75" PointY="1.625" IsExpanded="true" />
         <EntityTypeShape EntityType="QUANLYBIDAModel.BangChamCong" Width="1.5" PointX="3" PointY="4.75" IsExpanded="true" />
         <EntityTypeShape EntityType="QUANLYBIDAModel.ChiTietHoaDon" Width="1.5" PointX="8.25" PointY="4.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="QUANLYBIDAModel.ChiTietPhieuNhap" Width="1.5" PointX="8.25" PointY="0.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="QUANLYBIDAModel.HoaDon" Width="1.5" PointX="6" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="QUANLYBIDAModel.HoaDon" Width="1.5" PointX="6" PointY="4.125" IsExpanded="true" />
         <EntityTypeShape EntityType="QUANLYBIDAModel.KhachHang" Width="1.5" PointX="3.75" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="QUANLYBIDAModel.Kho" Width="1.5" PointX="8.25" PointY="1.625" IsExpanded="true" />
         <EntityTypeShape EntityType="QUANLYBIDAModel.NhanVien" Width="1.5" PointX="0.75" PointY="4.125" IsExpanded="true" />
-        <EntityTypeShape EntityType="QUANLYBIDAModel.PhieuNhap" Width="1.5" PointX="6" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="QUANLYBIDAModel.PhieuNhap" Width="1.5" PointX="8.25" PointY="8.375" IsExpanded="true" />
         <EntityTypeShape EntityType="QUANLYBIDAModel.SanPham" Width="1.5" PointX="6" PointY="0.75" IsExpanded="true" />
-        <AssociationConnector Association="QUANLYBIDAModel.FK_HoaDon_Ban" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYBIDAModel.FK_Doc_Ban" ManuallyRouted="false" />
         <AssociationConnector Association="QUANLYBIDAModel.FK_BCC_NhanVien" ManuallyRouted="false" />
         <AssociationConnector Association="QUANLYBIDAModel.FK_CTHD_HoaDon" ManuallyRouted="false" />
         <AssociationConnector Association="QUANLYBIDAModel.FK_CTHD_SanPham" ManuallyRouted="false" />
-        <AssociationConnector Association="QUANLYBIDAModel.FK_CTPN_PhieuNhap" ManuallyRouted="false" />
-        <AssociationConnector Association="QUANLYBIDAModel.FK_CTPN_SanPham" ManuallyRouted="false" />
         <AssociationConnector Association="QUANLYBIDAModel.FK_HoaDon_KhachHang" ManuallyRouted="false" />
         <AssociationConnector Association="QUANLYBIDAModel.FK_HoaDon_NhanVien" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYBIDAModel.FK_Kho_MaSP" ManuallyRouted="false" />
+        <AssociationConnector Association="QUANLYBIDAModel.FK_PhieuNhap_Kho" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

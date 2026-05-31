@@ -4,26 +4,23 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuanLyQuanBida.ViewModels"
+             xmlns:conv="clr-namespace:QuanLyQuanBida.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="734" d:DesignWidth="1150">
+    <UserControl.Resources>
+        <conv:ImagePathConverter x:Key="ImagePathConverter" />
+    </UserControl.Resources>
+
     <Grid Background="#FFE9E9E9">
         <Grid.RowDefinitions>
             <RowDefinition Height="120"/>
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <Border BorderBrush="#FFF2EDC2" BorderThickness="1" Margin="30,20,30,0" Background="White" CornerRadius="20">
+        <Border BorderBrush="#FFF2EDC2" BorderThickness="1" Margin="30,20,30,0" Background="White" CornerRadius="20,20,20,20">
             <Grid>
-                <TextBlock HorizontalAlignment="Left" Text="MENU" VerticalAlignment="Center" 
-                           FontWeight="Bold" FontSize="36" Foreground="Black" Margin="40,0,0,0"/>
-
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,40,0">
-                    <TextBlock Text="{Binding CurrentAccount.TenNV}" FontWeight="Bold" FontSize="20" 
-                               Foreground="Black" VerticalAlignment="Center" Margin="0,0,20,0"/>
-
-                    <Button Content="❌" Background="{x:Null}" FontWeight="Bold" FontSize="30" 
-                            Foreground="Black" BorderBrush="{x:Null}" Click="Button_Click"/>
-                </StackPanel>
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="MENU" VerticalAlignment="Center" FontWeight="Bold" FontSize="36" Foreground="Black" Margin="40,0,0,0"/>
+                <TextBlock Text="{Binding CurrentAccount.TenNV}" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" Foreground="Black" Margin="797,0,0,0"/>
             </Grid>
         </Border>
 
@@ -38,19 +35,21 @@
                     <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,15">
                         <StackPanel Margin="0,0,20,0">
                             <TextBlock Text="Sắp xếp" FontSize="12" Foreground="Gray"/>
-                            <ComboBox Width="120" SelectedIndex="0">
-                                <ComboBoxItem Content="Z -> A"/>
+                            <ComboBox Width="160" SelectedValue="{Binding MenuSortOrder, Mode=TwoWay}" SelectedValuePath="Content">
+                                <ComboBoxItem Content="Giá tăng dần"/>
+                                <ComboBoxItem Content="Giá giảm dần"/>
                                 <ComboBoxItem Content="A -> Z"/>
+                                <ComboBoxItem Content="Z -> A"/>
                             </ComboBox>
                         </StackPanel>
                         <StackPanel VerticalAlignment="Bottom">
                             <TextBlock Text="Tìm kiếm món ăn" FontSize="12" Foreground="Gray"/>
-                            <TextBox Width="300" Height="30" VerticalContentAlignment="Center" Padding="5"/>
+                            <TextBox Width="300" Height="30" VerticalContentAlignment="Center" Padding="5" Text="{Binding MenuSearchText, UpdateSourceTrigger=PropertyChanged}"/>
                         </StackPanel>
                     </StackPanel>
 
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
-                        <ItemsControl ItemsSource="{Binding DsSanPham}">
+                        <ItemsControl ItemsSource="{Binding MenuFilteredSanPham}">
                             <ItemsControl.ItemsPanel>
                                 <ItemsPanelTemplate>
                                     <WrapPanel />
@@ -69,15 +68,15 @@
                                                 <RowDefinition Height="*"/>
                                             </Grid.RowDefinitions>
 
-                                            <Image Source="{Binding Hinhanh}" Stretch="Uniform" Margin="10"/>
+                            <Image Source="{Binding HinhAnh, Converter={StaticResource ImagePathConverter}}" Stretch="Uniform" Margin="10"/>
 
                                             <StackPanel Grid.Row="1" VerticalAlignment="Center">
                                                 <TextBlock Text="{Binding Ten}" HorizontalAlignment="Center" 
                                                            FontWeight="SemiBold" FontSize="14"/>
-                                                <TextBlock Text="{Binding Dongia, StringFormat={}{0:N0} VND}" 
+                                                <TextBlock Text="{Binding DonGia, StringFormat={}{0:N0} VND}" 
                                                            HorizontalAlignment="Center" Foreground="#E67E22" Margin="0,5"/>
                                                 <Button Content="ĐẶT" Background="#2D5A42" Foreground="White" 
-                                                        Width="120" Height="28" BorderThickness="0">
+                                                        Width="120" Height="28" BorderThickness="0" Command="{Binding DataContext.AddToOrderCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding}">
                                                     <Button.Resources>
                                                         <Style TargetType="Border">
                                                             <Setter Property="CornerRadius" Value="15"/>
@@ -107,22 +106,45 @@
                                     <TextBlock Text="New Order" Foreground="White" FontSize="18" FontWeight="Bold"/>
                                     <TextBlock Text="Hôm nay" Foreground="#A8C3B4" FontSize="12"/>
                                 </StackPanel>
-                                <ComboBox DockPanel.Dock="Right" Width="80" HorizontalAlignment="Right" VerticalAlignment="Center">
-                                    <ComboBoxItem Content="Bàn 1"/>
-                                    <ComboBoxItem Content="Bàn 2"/>
-                                </ComboBox>
+                                <ComboBox DockPanel.Dock="Right" Width="140" HorizontalAlignment="Right" VerticalAlignment="Center"
+                                          ItemsSource="{Binding DsBanMo}"
+                                          SelectedItem="{Binding SelectedBanForOrder, Mode=TwoWay}"
+                                          DisplayMemberPath="TenBan"
+                                          SelectedValuePath="MaBan"/>
                             </DockPanel>
                         </Border>
 
-                        <StackPanel Grid.Row="2" >
+                        <StackPanel Grid.Row="1" Margin="10">
+                            <TextBlock Text="Các món đã chọn" FontWeight="Bold" FontSize="14" Margin="0,0,0,8"/>
+                            <ItemsControl ItemsSource="{Binding SelectedOrderItems}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <DockPanel Margin="0,4">
+                                            <StackPanel Orientation="Vertical" DockPanel.Dock="Left">
+                                                <TextBlock Text="{Binding Product.Ten}" FontWeight="SemiBold"/>
+                                                <TextBlock Text="{Binding LineTotal, StringFormat={}{0:N0} VND}" Foreground="#2D5A42" FontSize="12"/>
+                                            </StackPanel>
+                                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Right">
+                                                <Button Content="-" Width="28" Height="24" Margin="0,0,4,0" Command="{Binding DataContext.DecreaseQtyCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Path=.}"/>
+                                                <TextBlock Text="{Binding Quantity}" VerticalAlignment="Center" Width="24" TextAlignment="Center"/>
+                                                <Button Content="+" Width="28" Height="24" Margin="4,0,4,0" Command="{Binding DataContext.IncreaseQtyCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Path=.}"/>
+                                                <Button Content="X" Width="28" Height="24" Command="{Binding DataContext.RemoveOrderLineCommand, RelativeSource={RelativeSource AncestorType=UserControl}}" CommandParameter="{Binding Path=.}"/>
+                                            </StackPanel>
+                                        </DockPanel>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="2" Margin="10">
                             <Separator Margin="0,0,0,15"/>
                             <DockPanel Margin="0,0,0,10">
                                 <TextBlock Text="Tổng cộng" FontSize="16" FontWeight="Bold"/>
-                                <TextBlock Text="0 VND" HorizontalAlignment="Right" FontSize="16" FontWeight="Bold" Foreground="#2D5A42"/>
+                                <TextBlock Text="{Binding CurrentOrderTotal, StringFormat={}{0:N0} VND}" HorizontalAlignment="Right" FontSize="16" FontWeight="Bold" Foreground="#2D5A42"/>
                             </DockPanel>
 
-                            <Button Content="Xoá chọn tất cả" Margin="0,5" Background="#E74C3C" Foreground="White" Height="30" BorderThickness="0"/>
-                            <Button Content="ĐẶT BÀN" Margin="0,5,0,0" Background="#2D5A42" Foreground="White" Height="40" FontWeight="Bold" BorderThickness="0"/>
+                            <Button Content="Xoá chọn tất cả" Margin="0,5" Background="#E74C3C" Foreground="White" Height="30" BorderThickness="0" Command="{Binding ClearOrderCommand}"/>
+                            <Button Content="ĐẶT BÀN" Margin="0,5,0,0" Background="#2D5A42" Foreground="White" Height="40" FontWeight="Bold" BorderThickness="0" Command="{Binding PlaceOrderCommand}"/>
                         </StackPanel>
                     </Grid>
                 </Border>

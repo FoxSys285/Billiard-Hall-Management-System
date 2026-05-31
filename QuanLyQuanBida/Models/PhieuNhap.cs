@@ -14,17 +14,13 @@ namespace QuanLyQuanBida.Models
     
     public partial class PhieuNhap
     {
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public PhieuNhap()
-        {
-            this.ChiTietPhieuNhaps = new HashSet<ChiTietPhieuNhap>();
-        }
-    
-        public string Ma { get; set; }
+        public string MaPN { get; set; }
+        public string MaSP { get; set; }
+        public Nullable<int> SoLuong { get; set; }
+        public Nullable<double> GiaNhap { get; set; }
         public Nullable<System.DateTime> NgayNhap { get; set; }
-        public Nullable<double> TongTien { get; set; }
+        public string Ma { get; set; }
     
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ChiTietPhieuNhap> ChiTietPhieuNhaps { get; set; }
+        public virtual SanPham SanPham { get; set; }
     }
 }

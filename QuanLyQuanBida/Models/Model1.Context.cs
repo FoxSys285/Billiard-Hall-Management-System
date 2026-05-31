@@ -28,9 +28,9 @@ namespace QuanLyQuanBida.Models
         public virtual DbSet<Ban> Bans { get; set; }
         public virtual DbSet<BangChamCong> BangChamCongs { get; set; }
         public virtual DbSet<ChiTietHoaDon> ChiTietHoaDons { get; set; }
-        public virtual DbSet<ChiTietPhieuNhap> ChiTietPhieuNhaps { get; set; }
         public virtual DbSet<HoaDon> HoaDons { get; set; }
         public virtual DbSet<KhachHang> KhachHangs { get; set; }
+        public virtual DbSet<Kho> Khoes { get; set; }
         public virtual DbSet<NhanVien> NhanViens { get; set; }
         public virtual DbSet<PhieuNhap> PhieuNhaps { get; set; }
         public virtual DbSet<SanPham> SanPhams { get; set; }

@@ -23,6 +23,59 @@ namespace QuanLyQuanBida.Views
         public MainWindow()
         {
             InitializeComponent();
+            if (DataContext is MainViewModel vm)
+            {
+                vm.PropertyChanged += Vm_PropertyChanged;
+                AdjustWindowSize(vm.CurrentAccount != null);
+            }
+        }
+
+        private void Vm_PropertyChanged(object sender, System.ComponentModel.PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(MainViewModel.CurrentAccount))
+            {
+                if (sender is MainViewModel vm)
+                {
+                    AdjustWindowSize(vm.CurrentAccount != null);
+                }
+            }
+        }
+
+        private void AdjustWindowSize(bool loggedIn)
+        {
+            if (loggedIn)
+            {
+                MinWidth = 1400;
+                MinHeight = 750;
+                Width = 1400;
+                Height = 750;
+            }
+            else
+            {
+                MinWidth = 400;
+                MinHeight = 500;
+                Width = 400;
+                Height = 500;
+            }
+            CenterWindowOnScreen();
+        }
+
+        private void CenterWindowOnScreen()
+        {
+            Left = (SystemParameters.WorkArea.Width - Width) / 2 + SystemParameters.WorkArea.Left;
+            Top = (SystemParameters.WorkArea.Height - Height) / 2 + SystemParameters.WorkArea.Top;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            try
+            {
+                if (this.DataContext is MainViewModel vm)
+                {
+                    vm.RecordLogoutTime();
+                }
+            }
+            catch { }
         }
 
 

@@ -1,0 +1,59 @@
+<Window x:Class="QuanLyQuanBida.Views.InvoiceReportWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Báo cáo hóa đơn" SizeToContent="WidthAndHeight" MinWidth="760" MaxWidth="800" WindowStartupLocation="CenterOwner" Background="#FFF7F7F7">
+    <Border Background="White" Padding="24" Margin="12" CornerRadius="16" BorderBrush="#FFCCCCCC" BorderThickness="1">
+        <StackPanel>
+            <TextBlock Text="HÓA ĐƠN THANH TOÁN" FontSize="28" FontWeight="Bold" TextAlignment="Center" Foreground="#FF333333" Margin="0,0,0,18" />
+
+            <Grid Margin="0,0,0,18">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0">
+                    <TextBlock Text="Bàn" FontWeight="Bold" FontSize="14" />
+                    <TextBlock Text="{Binding TableName}" FontSize="16" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="1">
+                    <TextBlock Text="Giờ vào" FontWeight="Bold" FontSize="14" />
+                    <TextBlock Text="{Binding TimeIn}" FontSize="16" />
+                </StackPanel>
+
+                <StackPanel Grid.Column="2">
+                    <TextBlock Text="Giờ ra" FontWeight="Bold" FontSize="14" />
+                    <TextBlock Text="{Binding TimeOut}" FontSize="16" />
+                </StackPanel>
+            </Grid>
+
+            <DataGrid ItemsSource="{Binding Items}" AutoGenerateColumns="False" IsReadOnly="True" CanUserAddRows="False"
+                      HeadersVisibility="Column" GridLinesVisibility="Horizontal" BorderThickness="1" BorderBrush="#FFE0E0E0" Margin="0,0,0,18"
+                      RowBackground="#FFF9F9F9" AlternatingRowBackground="#FFF4F4F4" ColumnHeaderHeight="40">
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="STT" Binding="{Binding Stt}" Width="50" />
+                    <DataGridTextColumn Header="Sản phẩm/Món" Binding="{Binding Name}" Width="300" />
+                    <DataGridTextColumn Header="Số lượng" Binding="{Binding Quantity}" Width="120" />
+                    <DataGridTextColumn Header="Đơn giá" Binding="{Binding UnitPrice, StringFormat=N0}" Width="*">
+                        <DataGridTextColumn.ElementStyle>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="HorizontalAlignment" Value="Right" />
+                                <Setter Property="Margin" Value="0,0,10,0" />
+                            </Style>
+                        </DataGridTextColumn.ElementStyle>
+                    </DataGridTextColumn>
+                </DataGrid.Columns>
+            </DataGrid>
+
+            <StackPanel Margin="0,0,0,10">
+                <TextBlock Text="{Binding TotalText}" FontSize="18" FontWeight="Bold" TextAlignment="Right" />
+                <TextBlock Text="{Binding AmountInWords}" FontSize="14" FontStyle="Italic" TextAlignment="Right" Margin="0,6,0,0" />
+                <TextBlock Text="{Binding ThankYouText}" FontSize="16" FontWeight="Bold" TextAlignment="Center" Margin="0,20,0,0" />
+            </StackPanel>
+
+            <Button Content="Đóng" Width="120" HorizontalAlignment="Right" Padding="10,6" Click="CloseButton_Click" Background="#2E7D32" Foreground="White" />
+        </StackPanel>
+    </Border>
+</Window>

@@ -1,0 +1,64 @@
+<Window x:Class="QuanLyQuanBida.Views.AddKhoWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:sys="clr-namespace:System;assembly=mscorlib"
+        Title="Phiếu nhập mới" Height="450" Width="520" WindowStartupLocation="CenterOwner" ResizeMode="NoResize">
+    <Border Background="White" Padding="12">
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="PHIẾU NHẬP MỚI" FontWeight="Bold" FontSize="18" Margin="0,0,0,12" HorizontalAlignment="Center" />
+
+                <TextBlock Text="Thông tin phiếu nhập" FontSize="13" FontWeight="Bold" Foreground="#FF2E8B57" Margin="0,4" />
+                <Separator Margin="0,0,0,10"/>
+
+                <StackPanel Orientation="Horizontal" Margin="0,6">
+                    <StackPanel Width="220">
+                        <TextBlock Text="Mã phiếu nhập" FontSize="12" Foreground="Gray" />
+                        <TextBox Text="{Binding NewKhoMaSPKho}" IsReadOnly="True" />
+                    </StackPanel>
+                    <StackPanel Width="220" Margin="20,0,0,0">
+                        <TextBlock Text="Ngày nhập" FontSize="12" Foreground="Gray" />
+                        <DatePicker SelectedDate="{Binding NewKhoNgayNhap}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <TextBlock Text="Chi tiết mặt hàng" FontSize="13" FontWeight="Bold" Foreground="#FF2E8B57" Margin="0,4" />
+                <Separator Margin="0,0,0,10"/>
+
+                <StackPanel Orientation="Horizontal" Margin="0,6">
+                    <StackPanel Width="220">
+                        <TextBlock Text="Mã sản phẩm" FontSize="12" Foreground="Gray" />
+                        <ComboBox ItemsSource="{Binding DsSanPham}" 
+                                  SelectedItem="{Binding NewKhoSelectedSanPham, Mode=TwoWay}" 
+                                  DisplayMemberPath="Ma" 
+                                  SelectedValuePath="Ma"
+                                  VerticalAlignment="Center" Height="28" />
+
+                        <TextBlock Text="Số lượng" FontSize="12" Foreground="Gray" Margin="0,8,0,0" />
+                        <TextBox Text="{Binding NewKhoSoLuong, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+
+                    <StackPanel Width="220" Margin="20,0,0,0">
+                        <TextBlock Text="Đơn vị" FontSize="12" Foreground="Gray" />
+                        <ComboBox SelectedValue="{Binding NewKhoDonViTinh, UpdateSourceTrigger=PropertyChanged}" SelectedValuePath="Content">
+                            <ComboBoxItem Content="Chai"/>
+                            <ComboBoxItem Content="Gói"/>
+                            <ComboBoxItem Content="Lon"/>
+                            <ComboBoxItem Content="Ly"/>
+                            <ComboBoxItem Content="Tô"/>
+                            <ComboBoxItem Content="Cái"/>
+                        </ComboBox>
+
+                        <TextBlock Text="Giá nhập (VND)" FontSize="12" Foreground="Gray" Margin="0,8,0,0" />
+                        <TextBox Text="{Binding NewKhoGiaNhapText, UpdateSourceTrigger=PropertyChanged}" />
+                    </StackPanel>
+                </StackPanel>
+
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,20,0,0">
+                    <Button Content="Lập phiếu" Width="140" Height="36" Margin="6" Click="Confirm_Click" Background="#FF2E8B57" Foreground="White" />
+                    <Button Content="Hủy" Width="100" Height="36" Margin="6" Click="Cancel_Click" />
+                </StackPanel>
+            </StackPanel>
+        </ScrollViewer>
+    </Border>
+</Window>

@@ -5,20 +5,16 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:QuanLyQuanBida.ViewModels"
              mc:Ignorable="d" 
-             d:DesignHeight="734" d:DesignWidth="1150"
-             d:DataContext="{d:DesignInstance local:MainViewModel, IsDesignTimeCreatable=True}">
+             d:DesignHeight="734" d:DesignWidth="1150">
     <Grid Background="#FFE9E9E9">
         <Grid.RowDefinitions>
             <RowDefinition Height="68*"/>
             <RowDefinition Height="299*"/>
         </Grid.RowDefinitions>
-        <Border BorderBrush="#FFF2EDC2" BorderThickness="1" Margin="30,20,30,0" Background="White" CornerRadius="20">
+        <Border BorderBrush="#FFF2EDC2" BorderThickness="1" Margin="30,20,30,0" Background="White" CornerRadius="20,20,20,20">
             <Grid>
                 <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="LỊCH SỬ HÓA ĐƠN" VerticalAlignment="Center" FontWeight="Bold" FontSize="36" Foreground="Black" Margin="40,0,0,0"/>
-                <Button Content="❌" Background="{x:Null}" FontWeight="Bold" FontSize="40" Foreground="Black" Margin="0,26,33,33" HorizontalAlignment="Right" Width="71" BorderBrush="{x:Null}" Click="Button_Click"/>
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,120,0">
-                    <TextBlock Text="{Binding CurrentAccount.TenNV}" FontWeight="Bold" FontSize="20" Foreground="Black"/>
-                </StackPanel>
+                <TextBlock Text="{Binding CurrentAccount.TenNV}" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" Foreground="Black" Margin="797,0,0,0"/>
             </Grid>
         </Border>
 
@@ -44,11 +40,13 @@
                         <TextBlock FontSize="11" Text="Nhân viên lập" Foreground="Gray" />
                         <ComboBox ItemsSource="{Binding DsNhanVien}" SelectedItem="{Binding SelectedNhanVien}" DisplayMemberPath="TenNV" Width="160" />
                     </StackPanel>
-                    <Button Content="Lọc danh sách" Command="{Binding FilterCommand}" Margin="10,15,0,0" Padding="15,5" Background="#2E7D32" Foreground="White" Cursor="Hand" />
-                    <Button Content="Xuất Excel" Command="{Binding ExportExcelCommand}" Margin="10,15,0,0" Padding="15,5" Background="#1565C0" Foreground="White" Cursor="Hand" />
+                    <Button Content="Lọc danh sách" Command="{Binding LocHoaDonCommand}" Margin="10,15,0,0" Padding="15,5" Background="#2E7D32" Foreground="White" Cursor="Hand" />
+                    <Button Content="Xuất Excel" Command="{Binding XuatExcelHoaDonCommand}" Margin="10,15,0,0" Padding="15,5" Background="#1565C0" Foreground="White" Cursor="Hand" />
+                    <Button Content="Xuất báo cáo" Command="{Binding XuatBaoCaoHoaDonCommand}" Margin="10,15,0,0" Padding="15,5" Background="#FF8F00" Foreground="White" Cursor="Hand" />
+                    <Button Content="Tất cả" Command="{Binding ShowAllHoaDonCommand}" Margin="10,15,0,0" Padding="15,5" Background="#FF00BEFF" Foreground="White" Cursor="Hand" /> 
                 </StackPanel>
 
-                <DataGrid Grid.Row="2" ItemsSource="{Binding FilteredHoaDon}" AutoGenerateColumns="False" CanUserAddRows="False" 
+                <DataGrid Grid.Row="2" ItemsSource="{Binding FilteredHoaDon}" SelectedItem="{Binding SelectedHoaDon, Mode=TwoWay}" AutoGenerateColumns="False" CanUserAddRows="False" 
                           IsReadOnly="True" GridLinesVisibility="Horizontal" SelectionUnit="FullRow" BorderThickness="0.5" BorderBrush="LightGray">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Mã HD" Binding="{Binding MaHoaDon}" Width="80" />

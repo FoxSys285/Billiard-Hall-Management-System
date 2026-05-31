@@ -25,6 +25,15 @@ namespace QuanLyQuanBida.Views
             InitializeComponent();
         }
 
+        private void SearchTextBox_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            var vm = DataContext as ViewModels.MainViewModel;
+            if (vm == null) return;
+            var tb = sender as TextBox;
+            if (tb == null) return;
+            vm.SearchProductText = tb.Text;
+        }
+
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             Application.Current.Shutdown();

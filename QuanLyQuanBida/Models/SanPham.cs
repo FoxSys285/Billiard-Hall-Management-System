@@ -18,18 +18,18 @@ namespace QuanLyQuanBida.Models
         public SanPham()
         {
             this.ChiTietHoaDons = new HashSet<ChiTietHoaDon>();
-            this.ChiTietPhieuNhaps = new HashSet<ChiTietPhieuNhap>();
+            this.PhieuNhaps = new HashSet<PhieuNhap>();
         }
     
         public string Ma { get; set; }
         public string Ten { get; set; }
         public Nullable<double> DonGia { get; set; }
-        public Nullable<int> DVT { get; set; }
         public string HinhAnh { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ChiTietHoaDon> ChiTietHoaDons { get; set; }
+        public virtual Kho Kho { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<ChiTietPhieuNhap> ChiTietPhieuNhaps { get; set; }
+        public virtual ICollection<PhieuNhap> PhieuNhaps { get; set; }
     }
 }

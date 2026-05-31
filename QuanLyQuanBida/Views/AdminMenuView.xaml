@@ -1,0 +1,124 @@
+<UserControl x:Class="QuanLyQuanBida.Views.AdminMenuView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:QuanLyQuanBida.ViewModels"
+             xmlns:conv="clr-namespace:QuanLyQuanBida.Converters"
+             mc:Ignorable="d" 
+             d:DesignHeight="734" d:DesignWidth="1150">
+
+    <UserControl.Resources>
+        <conv:ImagePathConverter x:Key="ImagePathConverter" />
+    </UserControl.Resources>
+
+    <Grid Background="#FFE9E9E9">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="120"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Border BorderBrush="#FFF2EDC2" BorderThickness="1" Margin="30,20,30,0" Background="White" CornerRadius="20,20,20,20">
+            <Grid>
+                <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="ADMIN MENU" VerticalAlignment="Center" FontWeight="Bold" FontSize="36" Foreground="Black" Margin="40,0,0,0"/>
+                <TextBlock Text="{Binding CurrentAccount.TenNV}" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" Foreground="Black" Margin="797,0,0,0"/>
+            </Grid>
+        </Border>
+
+        <Border BorderBrush="#FFF2EDC2" BorderThickness="1" Grid.Row="1" Margin="30,20,30,20" Background="White" CornerRadius="20">
+            <Grid Margin="20">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="400"/>
+                </Grid.ColumnDefinitions>
+
+                <DockPanel Grid.Column="0" Margin="0,0,20,0">
+                    <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,15">
+                        <Button Content="Thêm sản phẩm" Width="120" Height="32" Margin="0,0,8,0" Command="{Binding NewProductCommand}"/>
+                        <Button Content="Xoá sản phẩm" Width="120" Height="32" Margin="0,0,8,0" Command="{Binding DeleteProductCommand}"/>
+                        <StackPanel Margin="20,0,0,0">
+                            <TextBlock Text="Tìm kiếm sản phẩm" FontSize="12" Foreground="Gray"/>
+                            <TextBox Width="300" Height="30" VerticalContentAlignment="Center" Padding="5" Text="{Binding MenuSearchText, UpdateSourceTrigger=PropertyChanged}"/>
+                        </StackPanel>
+                    </StackPanel>
+                    <!-- Add product overlay -->
+                    <Border Visibility="{Binding VisibileAddProduct}" Background="#AA000000" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                        <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="700" Height="520">
+                            <Border Background="White" CornerRadius="8" Padding="12">
+                                <StackPanel Orientation="Vertical">
+                                    <Image Source="{Binding NewProductHinhAnh, Converter={StaticResource ImagePathConverter}}" Height="160" Stretch="Uniform" Margin="0,0,0,8"/>
+                                    <Button Content="Thêm ảnh sản phẩm" Command="{Binding AddImageCommand}" Background="#2D5A42" Foreground="White" Height="36" Margin="40,0,40,12"/>
+
+                                    <TextBlock Text="Mã sản phẩm" Foreground="Gray" Margin="0,8,0,0" Width="600"/>
+                                    <TextBox Text="{Binding NewProductMa}" FontWeight="Bold" Height="25" Width="600" IsReadOnly="True" Background="#F0F0F0"/>
+
+                                    <TextBlock Text="Tên sản phẩm" Foreground="Gray" Margin="0,8,0,0" Width="600"/>
+                                    <TextBox Text="{Binding NewProductTen, UpdateSourceTrigger=PropertyChanged}" Width="600" Height="25"/>
+
+                                    <TextBlock Text="Đơn giá (VND)" Foreground="Gray" Margin="0,8,0,0" Width="600"/>
+                                    <TextBox Text="{Binding NewProductDonGia, UpdateSourceTrigger=PropertyChanged}" Width="600" Height="25"/>
+
+                                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="35,12,0,0">
+                                        <Button Content="Thêm sản phẩm" Command="{Binding ConfirmAddProductCommand}" Background="#2D5A42" Foreground="White" Height="36" Width="300"/>
+                                        <Button Content="Huỷ" Command="{Binding CancelAddProductCommand}" Height="36" Width="300" Margin="8,0,0,0"/>
+                                    </StackPanel>
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Border>
+
+                    <DataGrid ItemsSource="{Binding MenuFilteredSanPham}" SelectedItem="{Binding SelectedMenuProduct, Mode=TwoWay}" AutoGenerateColumns="False" CanUserAddRows="False">
+                        <DataGrid.Columns>
+                            <DataGridTextColumn Header="Mã sản phẩm" Binding="{Binding Ma}" Width="100"/>
+                            <DataGridTextColumn Header="Tên sản phẩm" Binding="{Binding Ten}" Width="*"/>
+                            <DataGridTextColumn Header="Đơn giá (VND)" Binding="{Binding DonGia, StringFormat={}{0:N0}}" Width="140"/>
+                        </DataGrid.Columns>
+                    </DataGrid>
+                </DockPanel>
+
+                <Border Grid.Column="1" Background="#F9F9F9" CornerRadius="15" BorderBrush="#EEEEEE" BorderThickness="1" Margin="10,0,0,0">
+                    <StackPanel Margin="20">
+                        <Image Source="{Binding SelectedMenuProduct.HinhAnh, Converter={StaticResource ImagePathConverter}}" Height="180" Stretch="Uniform" HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="320"/>
+                        <TextBlock Text="Mã sản phẩm" Foreground="Gray" Margin="0,8,0,0"/>
+                        <TextBlock Text="{Binding SelectedMenuProduct.Ma}" FontWeight="Bold"/>
+                        <TextBlock Text="Tên sản phẩm" Foreground="Gray" Margin="0,8,0,0"/>
+                        <TextBlock Text="{Binding SelectedMenuProduct.Ten}" FontWeight="Bold"/>
+                        <TextBlock Text="Giá (VND)" Foreground="Gray" Margin="0,8,0,0"/>
+                        <TextBlock Text="{Binding SelectedMenuProduct.DonGia, StringFormat={}{0:N0}}" FontWeight="Bold"/>
+                        <TextBlock Text="Tồn kho hiện tại" Foreground="Gray" Margin="0,8,0,0"/>
+                        <TextBlock Text="{Binding SelectedMenuProductTonKho}" FontWeight="Bold"/>
+                        <Button Content="Tạo phiếu nhập" Command="{Binding NewKhoCommand}" Background="#2D5A42" Foreground="White" Height="36" Margin="0,12,0,0"/>
+                        <Button Content="Sửa chi tiết sản phẩm" Background="#2D5A42" Foreground="White" Height="36" Margin="0,12,0,0" Command="{Binding ViewDetailProductCommand}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- Edit product overlay -->
+                <Border Visibility="{Binding VisibileEditProduct}" Background="#AA000000" Grid.ColumnSpan="2" Grid.RowSpan="2">
+                    <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="700" Height="420">
+                        <Border Background="White" CornerRadius="8" Padding="12" Margin="0,-39,0,-49">
+                            <StackPanel Orientation="Vertical">
+                                <Image Source="{Binding EditProductHinhAnh, Converter={StaticResource ImagePathConverter}}" Height="220" Stretch="Uniform" Margin="0,0,0,8"/>
+                                <Button Content="Đổi ảnh" Command="{Binding ChangeEditImageCommand}" Background="#2D5A42" Foreground="White" Height="32" Width="120" Margin="0,0,0,12"/>
+
+                                <TextBlock Text="Mã sản phẩm" Foreground="Gray" Margin="0,8,0,0"/>
+                                <!-- Ma is readonly -->
+                                <TextBox Text="{Binding EditProductMa}" IsReadOnly="True" Background="#F0F0F0" Height="25" Width="624"/>
+
+                                <TextBlock Text="Đơn giá (VND)" Foreground="Gray" Margin="0,8,0,0"/>
+                                <TextBox Text="{Binding EditProductDonGia, UpdateSourceTrigger=PropertyChanged}" Width="624" Height="25"/>
+
+                                <TextBlock Text="Tên sản phẩm" Foreground="Gray" Margin="0,8,0,0"/>
+                                <TextBox Text="{Binding EditProductTen, UpdateSourceTrigger=PropertyChanged}" Width="624" Height="25"/>
+
+                                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,12,0,0">
+                                    <Button Content="Lưu" Command="{Binding SaveEditProductCommand}" Background="#2D5A42" Foreground="White" Height="36" Width="335"/>
+                                    <Button Content="Huỷ" Command="{Binding CancelEditProductCommand}" Height="36" Width="299" Margin="8,0,0,0"/>
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                </Border>
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>

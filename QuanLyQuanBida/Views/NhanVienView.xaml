@@ -14,7 +14,7 @@
         <Border  IsEnabled="{Binding IsNVEnabled}" BorderBrush="#FFF2EDC2" BorderThickness="1" Margin="30,20,30,0" Background="White" CornerRadius="20,20,20,20">
             <Grid>
                 <TextBlock HorizontalAlignment="Left" TextWrapping="Wrap" Text="NHÂN VIÊN" VerticalAlignment="Center" FontWeight="Bold" FontSize="36" Foreground="Black" Margin="40,0,0,0"/>
-                <Button Content="❌" Click="Button_Click" Background="White" FontWeight="Bold" FontSize="40" Foreground="Black" Margin="985,26,44,33" BorderBrush="{x:Null}" BorderThickness="0,0,0,0"/>
+                
                 <TextBlock Text="{Binding CurrentAccount.TenNV}" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Center" FontWeight="Bold" FontSize="20" Foreground="Black" Margin="797,0,0,0"/>
             </Grid>
         </Border>
@@ -32,7 +32,7 @@
                         </LinearGradientBrush>
                     </Button.Background>
                 </Button>
-                <Button Content="Chấm công" HorizontalAlignment="Left" Width="100"  Margin="474,67,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold" Foreground="White" BorderBrush="White">
+                <Button Command="{Binding VisibileTableChamCongCommand}" Content="Chấm công" HorizontalAlignment="Left" Width="100" Margin="474,67,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold" Foreground="White" BorderBrush="White">
                     <Button.Background>
                         <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                             <GradientStop Color="#FF20800E"/>
@@ -94,7 +94,7 @@
                         </Style>
                     </Button.Style>
                 </Button>
-                <DataGrid SelectionMode="Single" SelectedItem="{Binding IsSelectedNV}" Margin="10,124,47,219" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" ItemsSource="{Binding DsNhanVien}">
+                <DataGrid SelectionMode="Single" SelectedItem="{Binding IsSelectedNV, Mode=TwoWay}" Margin="10,124,47,219" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" ItemsSource="{Binding FilteredNhanVien}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Header="Họ và tên" Width="200" Binding="{Binding TenNV}">
                             <DataGridTextColumn.HeaderStyle>
@@ -122,7 +122,7 @@
                         </DataGridTextColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-                <TextBox HorizontalAlignment="Left" Margin="80,67,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="237" FontSize="14" BorderBrush="#FF4F8C53" Height="23" BorderThickness="0,0,0,1"/>
+                <TextBox HorizontalAlignment="Left" Margin="80,67,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="237" FontSize="14" BorderBrush="#FF4F8C53" Height="23" BorderThickness="0,0,0,1" Text="{Binding SearchNhanVien, UpdateSourceTrigger=PropertyChanged}"/>
                 <Rectangle Height="2" Fill="#FF4F8C53" VerticalAlignment="Top" Margin="471,275,110,0" RenderTransformOrigin="0.5,0.5" Grid.ColumnSpan="2">
                     <Rectangle.RenderTransform>
                         <TransformGroup>
@@ -149,7 +149,7 @@
                         <TextBlock HorizontalAlignment="Left" Margin="20,360,0,0" TextWrapping="Wrap" Text="Tài khoản" VerticalAlignment="Top" FontWeight="Bold" Foreground="#FF70B875"/>
                         <TextBlock HorizontalAlignment="Left" Margin="168,360,0,0" TextWrapping="Wrap" Text="Mật khẩu" VerticalAlignment="Top" FontWeight="Bold" Foreground="#FF70B875"/>
 
-                        <Button Command="{Binding EditNVCommand}"  Content="Sửa" HorizontalAlignment="Center" Width="200" Margin="0,460,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold">
+                        <Button Command="{Binding EditNVCommand}"  Content="Sửa" HorizontalAlignment="Center" Width="200" Margin="0,480,0,0" VerticalAlignment="Top" FontSize="14" FontWeight="Bold">
                             <Button.Style>
                                 <Style TargetType="Button">
                                     <Setter Property="Template">
@@ -202,13 +202,15 @@
                         </Button>
                         <TextBox Text="{Binding EditingNV.MaNV}" IsReadOnly="True" HorizontalAlignment="Left" Margin="20,60,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="102" Foreground="#FF8FA698" FontSize="14" BorderBrush="#FF7FBA85" Background="{x:Null}" BorderThickness="0,0,0,1"/>
                         <TextBox Text="{Binding EditingNV.TenNV}" HorizontalAlignment="Left" Margin="135,60,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="173" Foreground="#FF2E583E" FontSize="14" BorderBrush="#FF239D2F" Background="{x:Null}" BorderThickness="0,0,0,1"/>
-                        <ComboBox ItemsSource="{Binding DanhSachChucVu}" SelectedItem="{Binding EditingNV.ChucVu, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="20,140,0,0" VerticalAlignment="Top" Width="102" Foreground="#FF2E583E" FontSize="14" BorderThickness="0,0,0,0" Background="{x:Null}"/>
+                        <ComboBox ItemsSource="{Binding DsChucVu}" SelectedItem="{Binding EditingNV.ChucVu, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Left" Margin="20,140,0,0" VerticalAlignment="Top" Width="102" Foreground="#FF2E583E" FontSize="14" BorderThickness="0,0,0,0" Background="{x:Null}"/>
                         <TextBox Text="{Binding EditingNV.DiaChi}" HorizontalAlignment="Left" Margin="20,220,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="125" Foreground="#FF2E583E" FontSize="14" BorderBrush="#FF239D2F" Background="{x:Null}" BorderThickness="0,0,0,1"/>
                         <TextBox Text="{Binding EditingNV.SDT}" HorizontalAlignment="Left" Margin="159,220,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="149" Foreground="#FF2E583E" FontSize="14" BorderBrush="#FF239D2F" Background="{x:Null}" BorderThickness="0,0,0,1"/>
                         <DatePicker SelectedDate="{Binding EditingNV.NgaySinh}" HorizontalAlignment="Left" Margin="20,300,0,0" VerticalAlignment="Top" Width="129" Background="#FFF4F4F4" BorderBrush="{x:Null}" Foreground="#FF2E583E" FontSize="14"/>
                         <DatePicker SelectedDate="{Binding EditingNV.NgayVL}" HorizontalAlignment="Left" Margin="171,300,0,0" VerticalAlignment="Top" Width="137" BorderBrush="{x:Null}" Foreground="#FF2E583E" FontSize="14"/>
                         <TextBox Text="{Binding EditingNV.TaiKhoan}" HorizontalAlignment="Left" Margin="20,380,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="134" Foreground="#FF2E583E" FontSize="14" BorderBrush="#FF239D2F" Background="{x:Null}" BorderThickness="0,0,0,1"/>
                         <TextBox Text="{Binding EditingNV.MatKhau}" HorizontalAlignment="Left" Margin="168,380,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="140" Foreground="#FF2E583E" FontSize="14" BorderBrush="#FF239D2F" Background="{x:Null}" BorderThickness="0,0,0,1"/>
+                        <TextBlock HorizontalAlignment="Left" Margin="30,420,0,0" TextWrapping="Wrap" Text="Lương cơ bản" VerticalAlignment="Top" FontWeight="Bold" Foreground="#FF70B875"/>
+                        <TextBox Text="{Binding EditingNV.LuongCB}" PreviewTextInput="TextBox_PreviewTextInput_NumericOnly" HorizontalAlignment="Left" Margin="30,440,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="278" Foreground="#FF2E583E" FontSize="14" BorderBrush="#FF239D2F" Background="{x:Null}" BorderThickness="0,0,0,1"/>
                     </Grid>
                 </Border>
                 <TextBlock HorizontalAlignment="Left" Margin="10,69,0,0" TextWrapping="Wrap" Text="Tìm kiếm:" VerticalAlignment="Top" FontWeight="Bold" Foreground="#FF3C6A25" FontSize="14"/>
@@ -221,7 +223,7 @@
                 IsEnabled="True"
                 BorderBrush="#FF2E6A3C"
                 BorderThickness="3"
-                Margin="331,78,331,130"
+                Margin="331,78,331,48"
                 Background="White"
                 CornerRadius="10" Grid.RowSpan="2">
             <Grid>
@@ -256,7 +258,8 @@
                         <TextBlock HorizontalAlignment="Left" Margin="255,220,0,0" TextWrapping="Wrap" Text="Ngày vào làm" VerticalAlignment="Top" Foreground="#FF28893C"/>
                         <TextBlock HorizontalAlignment="Left" Margin="30,280,0,0" TextWrapping="Wrap" Text="Tài khoản" VerticalAlignment="Top" Foreground="#FF28893C"/>
                         <TextBlock HorizontalAlignment="Left" Margin="255,280,0,0" TextWrapping="Wrap" Text="Mật khẩu" VerticalAlignment="Top" Foreground="#FF28893C"/>
-                        <Button Content="Thêm nhân viên" HorizontalAlignment="Left" Margin="30,358,0,0" VerticalAlignment="Top" Foreground="White" FontSize="14" Width="407" FontWeight="Bold" Height="35">
+                        <TextBlock HorizontalAlignment="Left" Margin="30,340,0,0" TextWrapping="Wrap" Text="Lương cơ bản" VerticalAlignment="Top" Foreground="#FF28893C"/>
+                        <Button Command="{Binding AddNVCommand}" Content="Thêm nhân viên" HorizontalAlignment="Left" Margin="30,420,0,0" VerticalAlignment="Top" Foreground="White" FontSize="14" Width="407" FontWeight="Bold" Height="35">
                             <Button.Background>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                     <GradientStop Color="#FF1CA11F" Offset="0.008"/>
@@ -264,21 +267,22 @@
                                 </LinearGradientBrush>
                             </Button.Background>
                         </Button>
-                        <TextBox HorizontalAlignment="Left" Margin="30,60,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="170" Foreground="#FF28893C" FontSize="14"/>
+                        <TextBox Text="{Binding InputMaNV}" IsReadOnly="True" HorizontalAlignment="Left" Margin="30,60,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="170" Foreground="#FF8FA698" FontSize="14" Background="{x:Null}" BorderBrush="#FF7FBA85" BorderThickness="0,0,0,1"/>
                         <TextBox Text="{Binding InputTenNV}" HorizontalAlignment="Left" Margin="255,60,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="182" RenderTransformOrigin="0.22,-0.546" Foreground="#FF28893C" FontSize="14"/>
                         <TextBox Text="{Binding InputDiaChi}" HorizontalAlignment="Left" Margin="30,180,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="170" Foreground="#FF28893C" FontSize="14"/>
                         <TextBox Text="{Binding InputSDT}" HorizontalAlignment="Left" Margin="256,180,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="182" Foreground="#FF28893C" FontSize="14"/>
                         <TextBox Text="{Binding InputNewTK}" HorizontalAlignment="Left" Margin="30,300,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="170" Foreground="#FF28893C" FontSize="14"/>
                         <TextBox Text="{Binding InputNewMK}" HorizontalAlignment="Left" Margin="255,300,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="182" Foreground="#FF28893C" FontSize="14"/>
+                        <TextBox Text="{Binding InputLuongCB}" PreviewTextInput="TextBox_PreviewTextInput_NumericOnly" HorizontalAlignment="Left" Margin="30,360,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="170" Foreground="#FF28893C" FontSize="14"/>
                         <DatePicker SelectedDate="{Binding InputNgaySinh, Mode=TwoWay}" HorizontalAlignment="Left" Margin="30,240,0,0" VerticalAlignment="Top" Background="{x:Null}" FontSize="14" Width="170"/>
                         <DatePicker SelectedDate="{Binding InputNgayVL, Mode=TwoWay}" HorizontalAlignment="Left" Margin="255,240,0,0" VerticalAlignment="Top" FontSize="14" Width="182"/>
-                        <ComboBox Text="{Binding InputChucVu}" HorizontalAlignment="Left" Margin="30,120,0,0" VerticalAlignment="Top" Width="170" Foreground="#FF28893C" FontSize="14"/>
+                        <ComboBox ItemsSource="{Binding DsChucVu}" SelectedItem="{Binding InputChucVu, Mode=TwoWay}" HorizontalAlignment="Left" Margin="30,120,0,0" VerticalAlignment="Top" Width="170" Foreground="#FF28893C" FontSize="14"/>
                     </Grid>
                 </Border>
 
             </Grid>
         </Border>
-        <Border Visibility="{Binding VisibileAddNV}"
+        <Border Visibility="{Binding VisibileChamCong}"
         Panel.ZIndex="100"
         IsEnabled="True"
         BorderBrush="#FF2E6A3C"
@@ -294,71 +298,70 @@
                 <Border BorderBrush="White" BorderThickness="1" Margin="10,10,10,10" Grid.Row="0" Background="#FFEDEDED" CornerRadius="10,10,10,10">
                     <Grid>
                         <TextBlock HorizontalAlignment="Left" Margin="20,0,0,0" TextWrapping="Wrap" Text="CHẤM CÔNG" VerticalAlignment="Center" FontWeight="Bold" FontSize="16" Foreground="#FF28893C"/>
-                        <Button Command="{Binding ExitThemNVCommand}" Content="❌" HorizontalAlignment="Left" Margin="865,0,0,0" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF28893C"/>
+                        <Button Command="{Binding ExitChamCongCommand}" Content="❌" HorizontalAlignment="Left" Margin="865,0,0,0" VerticalAlignment="Center" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="#FF28893C"/>
                     </Grid>
                 </Border>
                 <Border BorderBrush="White" BorderThickness="1" Margin="10,10,10,10" Grid.Row="1" Background="#FFEDEDED" CornerRadius="10,10,10,10">
                     <Grid>
-                        <TextBlock HorizontalAlignment="Left" Margin="29,45,0,0" TextWrapping="Wrap" Text="Mã" VerticalAlignment="Top"/>
-                        <TextBlock HorizontalAlignment="Center" Margin="0,45,0,0" TextWrapping="Wrap" Text="Họ và tên" VerticalAlignment="Top"/>
-                        <TextBlock HorizontalAlignment="Left" Margin="76,182,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
-                        <TextBlock HorizontalAlignment="Left" Margin="348,190,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top"/>
-                        <TextBox HorizontalAlignment="Left" Margin="29,66,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                        <TextBox HorizontalAlignment="Left" Margin="204,66,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-                    </Grid>
-                </Border>
-                <Border BorderBrush="White" BorderThickness="1" Margin="10,10,10,10" Grid.Row="1" Background="#FFEDEDED" CornerRadius="10,10,10,10">
-                    <Grid>
-                        
-                        <DataGrid  SelectionMode="Single" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" Margin="10,138,416,138" Background="White">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Họ tên" Width="150">
-                                    <DataGridTextColumn.HeaderStyle>
-                                        <Style TargetType="DataGridColumnHeader">
-                                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                                            <Setter Property="FontWeight" Value="Bold"/>
-                                        </Style>
-                                    </DataGridTextColumn.HeaderStyle>
-                                </DataGridTextColumn>
-                                <DataGridTextColumn Header="Chức vụ" Width="150">
-                                    <DataGridTextColumn.HeaderStyle>
-                                        <Style TargetType="DataGridColumnHeader">
-                                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                                            <Setter Property="FontWeight" Value="Bold"/>
-                                        </Style>
-                                    </DataGridTextColumn.HeaderStyle>
-                                </DataGridTextColumn>
-                                <DataGridTextColumn Header="Số giờ làm việc" Width="*">
-                                    <DataGridTextColumn.HeaderStyle>
-                                        <Style TargetType="DataGridColumnHeader">
-                                            <Setter Property="HorizontalContentAlignment" Value="Center" />
-                                            <Setter Property="FontWeight" Value="Bold"/>
-                                        </Style>
-                                    </DataGridTextColumn.HeaderStyle>
-                                </DataGridTextColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                        <ListBox d:ItemsSource="{d:SampleData ItemCount=10}" Margin="534,77,10,69" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
-                            <ListBox.ItemTemplate>
-                                <DataTemplate>
-                                    <StackPanel Orientation="Horizontal">
-                                        <TextBlock Width="100" Margin="10" Text="12/02/2005"/>
-                                        <TextBlock Width="100" Margin="10" Text="9 giờ"/>
-                                        <TextBlock Width="100" Margin="10" Text="Đã chấm công"/>
-                                    </StackPanel>
-                                </DataTemplate>
-                            </ListBox.ItemTemplate>
-                        </ListBox>
-                        <TextBlock HorizontalAlignment="Left" Margin="658,35,0,0" TextWrapping="Wrap" Text="Bảng chấm công"  VerticalAlignment="Top" FontWeight="Bold" FontSize="16" Foreground="#FF28893C"/>
-                        <Button Content="Chấm công" HorizontalAlignment="Left" Margin="648,371,0,0" VerticalAlignment="Top" Width="146"/>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="2.5*"/>
+                            <ColumnDefinition Width="1.5*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <StackPanel Grid.Column="0" Margin="10">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,0,8"/>
+                            <DataGrid ItemsSource="{Binding DsBangChamCongView}" VerticalScrollBarVisibility="Visible" SelectedItem="{Binding SelectedChamCongItem, Mode=TwoWay}" SelectionMode="Single" IsReadOnly="True" AutoGenerateColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" Background="White" Height="333">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Mã BCC" Width="100" Binding="{Binding MaBCC}" IsReadOnly="True" />
+                                    <DataGridTextColumn Header="Tên nhân viên" Width="200" Binding="{Binding TenNV}" IsReadOnly="True" />
+                                    <DataGridTextColumn Header="Ngày" Width="120" Binding="{Binding Ngay, StringFormat={}{0:dd/MM/yyyy}}" IsReadOnly="True" />
+                                    <DataGridTextColumn Header="Đã chấm công" Width="*" Binding="{Binding TrangThaiChamCong}" IsReadOnly="True" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+
+                        <Border Grid.Column="1" Background="White" CornerRadius="10" Margin="10" Padding="12">
+                            <StackPanel>
+                                <TextBlock Text="Chi tiết chấm công" FontWeight="Bold" FontSize="16" Foreground="#FF28893C" Margin="0,0,0,12"/>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <TextBlock Text="Mã BCC:" Width="120" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding SelectedChamCongItem.MaBCC}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <TextBlock Text="Mã NV:" Width="120" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding SelectedChamCongItem.MaNV}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <TextBlock Text="Tên NV:" Width="120" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding SelectedChamCongItem.TenNV}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <TextBlock Text="Ngày:" Width="120" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding SelectedChamCongItem.Ngay, StringFormat={}{0:dd/MM/yyyy}}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <TextBlock Text="Số giờ:" Width="120" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding SelectedChamCongItem.SoGio}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <TextBlock Text="Trạng thái:" Width="120" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding SelectedChamCongItem.TrangThaiChamCong}"/>
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                                    <TextBlock Text="Số tiền:" Width="120" FontWeight="Bold"/>
+                                    <TextBlock Text="{Binding SelectedChamCongItem.SoTien, StringFormat={}{0:N0} VND}"/>
+                                </StackPanel>
+                                <Button Command="{Binding PayChamCongCommand}" Content="Chấm công" Width="140" Margin="0,12,0,0" HorizontalAlignment="Left"/>
+                            </StackPanel>
+                        </Border>
                     </Grid>
                 </Border>
             </Grid>
         </Border>
-        <Grid Grid.RowSpan="2" 
-          Background="#66000000" 
-          Panel.ZIndex="99"
-          Visibility="{Binding VisibileAddNV}">
+                <Grid Grid.RowSpan="2" 
+                    Background="#66000000" 
+                    Panel.ZIndex="99"
+                    Visibility="{Binding OverlayMaskVisibility}">
         </Grid>
     </Grid>
 </UserControl>
